@@ -19,7 +19,7 @@ FetchContent_MakeAvailable(googletest)
 # === TEST ===
 add_executable(vec3_test ${PROJECT_SOURCE_DIR}/test/vec3_test.cpp)
 target_link_libraries(vec3_test gtest_main)
-add_test(NAME example_test COMMAND example)
+add_test(NAME Vec3Test COMMAND InitsToZero)
 
 # === RUN ===
 add_executable(cannoli ${PROJECT_SOURCE_DIR}/src/cannoli.cpp)
