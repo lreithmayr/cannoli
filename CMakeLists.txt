@@ -17,7 +17,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # === TEST ===
-add_executable(vec3_test ${PROJECT_SOURCE_DIR}/test/vec3_test.cpp)
+add_executable(vec3_test ${PROJECT_SOURCE_DIR}/test/vec3f_test.cpp)
 target_link_libraries(vec3_test gtest_main)
 add_test(NAME Vec3Test COMMAND InitsToZero)
 
