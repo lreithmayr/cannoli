@@ -3,9 +3,17 @@ project(cannoli)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# === PROJECT SETUP ===
+
 include_directories(
         ${PROJECT_SOURCE_DIR}/include
 )
+
+add_library(${PROJECT_NAME} SHARED
+        src/light_ray.cpp
+)
+
+# === GOOGLETEST SETUP ===
 
 include(FetchContent)
 FetchContent_Declare(
@@ -20,4 +28,7 @@ target_link_libraries(vec3_test gtest_main)
 add_test(NAME Vec3Test COMMAND vec3test)
 
 # === RUN ===
-add_executable(cannoli ${PROJECT_SOURCE_DIR}/src/cannoli.cpp)
+add_executable(cannoli_main ${PROJECT_SOURCE_DIR}/src/cannoli_main.cpp)
+target_link_libraries(
+        cannoli_main ${PROJECT_NAME}
+)

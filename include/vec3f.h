@@ -12,39 +12,39 @@ namespace cannoli {
 	Vec3f(float x, float y, float z) : m_vec{x, y, z} {
 	}
 
-	float x() {
+	[[nodiscard]] float x() const {
 	  return m_vec[0];
 	}
 
-	float y() {
+	[[nodiscard]] float y() const {
 	  return m_vec[1];
 	}
 
-	float z() {
+	[[nodiscard]] float z() const {
 	  return m_vec[2];
 	}
 
-	float operator[](int i) const {
+	float operator[](const int i) const {
 	  return m_vec[i];
 	}
 
-	Vec3f operator*(const float& f) {
+	Vec3f operator*(const float& f) const {
 	  return {m_vec[0] * f, m_vec[1] * f, m_vec[2] * f};
 	}
 
-	Vec3f operator*(const Vec3f& vec) {
+	Vec3f operator*(const Vec3f& vec) const {
 	  return {m_vec[0] * vec[0], m_vec[1] * vec[1], m_vec[2] * vec[2]};
 	}
 
-	Vec3f operator+(const Vec3f& vec) {
+	Vec3f operator+(const Vec3f& vec) const {
 	  return {m_vec[0] + vec[0], m_vec[1] + vec[1], m_vec[2] + vec[2]};
 	}
 
-	Vec3f operator-() {
+	Vec3f operator-() const {
 	  return {-m_vec[0], -m_vec[1], -m_vec[2]};
 	}
 
-	Vec3f operator-(const Vec3f& vec) {
+	Vec3f operator-(const Vec3f& vec) const {
 	  return {m_vec[0] - vec[0], m_vec[1] - vec[1], m_vec[2] - vec[2]};
 	}
 
@@ -52,15 +52,15 @@ namespace cannoli {
 	  return out << vec[0] << ' ' << vec[1] << ' ' << vec[2];
 	}
 
-	float length() {
+	[[nodiscard]] float length() const {
 	  return (std::sqrt(m_vec[0] * m_vec[0] + m_vec[1] * m_vec[1] + m_vec[2] * m_vec[2]));
 	}
 
-	float dot(Vec3f& vec) {
+	[[nodiscard]] float dot(Vec3f& vec) {
 	  return (m_vec[0] * vec[0] + m_vec[1] * vec[1] + m_vec[2] * vec[2]);
 	}
 
-	Vec3f cross(Vec3f& vec) {
+	[[nodiscard]] Vec3f cross(Vec3f& vec) const {
 	  return {
 		  m_vec[1] * vec[2] - m_vec[2] * vec[1],
 		  m_vec[2] * vec[0] - m_vec[0] * vec[2],
@@ -68,7 +68,7 @@ namespace cannoli {
 	  };
 	}
 
-	Vec3f normalize() {
+	[[nodiscard]] Vec3f normalize() const {
 	  return (*this * (1 / this->length()));
 	}
 

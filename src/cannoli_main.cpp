@@ -13,7 +13,7 @@ int main() {
   for (int i = img_height - 1; i >= 0; i--) {
 	for (int j = 0; j < img_width; j++) {
 	  cannoli::ColorRGB pixel_color(float(j) / (img_width - 1), float(i) / (img_height - 1), 0.25);
-	  std::cerr << "\rScanlines remaining: " << j << ' ' << std::flush;
+	  std::cerr << "\rScanlines remaining: " << i << ' ' << std::flush;
 	  cannoli::WritePPMImage(ppm_image, pixel_color);
 	}
   }
