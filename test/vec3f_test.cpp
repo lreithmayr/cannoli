@@ -18,17 +18,17 @@ class Vec3fTest : public ::testing::Test {
 TEST_F(Vec3fTest, InitsToZero) {
   cannoli::Vec3f vec;
 
-  EXPECT_FLOAT_EQ(vec.x(), 0);
-  EXPECT_FLOAT_EQ(vec.y(), 0);
-  EXPECT_FLOAT_EQ(vec.z(), 0);
+  EXPECT_FLOAT_EQ(vec.GetX(), 0);
+  EXPECT_FLOAT_EQ(vec.GetY(), 0);
+  EXPECT_FLOAT_EQ(vec.GetZ(), 0);
 }
 
 TEST_F(Vec3fTest, InitsManually) {
   cannoli::Vec3f vec(1.0, 7.0, 3.5);
 
-  EXPECT_FLOAT_EQ(vec.x(), 1.0);
-  EXPECT_FLOAT_EQ(vec.y(), 7.0);
-  EXPECT_FLOAT_EQ(vec.z(), 3.5);
+  EXPECT_FLOAT_EQ(vec.GetX(), 1.0);
+  EXPECT_FLOAT_EQ(vec.GetY(), 7.0);
+  EXPECT_FLOAT_EQ(vec.GetZ(), 3.5);
 }
 
 TEST_F(Vec3fTest, FloatMultiplication) {

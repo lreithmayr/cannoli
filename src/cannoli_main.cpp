@@ -1,22 +1,18 @@
-#include "color.h"
+#include "ray_tracer.h"
 
 #include <iostream>
 
+#define ASPECT_RATIO 16.0/9.0
+#define IMG_WIDTH 400
+#define VIEWPORT_HEIGHT 2.0
+#define FOCAL_LENGTH 1.0
+
 int main() {
-  const int img_width = 256;
-  const int img_height = 256;
+  std::string out_path = "../images/traced.ppm";
 
-  std::ofstream ppm_image;
-  ppm_image.open("../images/image.ppm");
-  ppm_image << "P3\n" << img_width << ' ' << img_height << "\n255\n";
+  cannoli::Camera camera(ASPECT_RATIO, VIEWPORT_HEIGHT, FOCAL_LENGTH);
+  cannoli::Image image(ASPECT_RATIO, IMG_WIDTH);
+  cannoli::RayTracer rt(camera, image, out_path);
 
-  for (int i = img_height - 1; i >= 0; i--) {
-	for (int j = 0; j < img_width; j++) {
-	  cannoli::ColorRGB pixel_color(float(j) / (img_width - 1), float(i) / (img_height - 1), 0.25);
-	  std::cerr << "\rScanlines remaining: " << i << ' ' << std::flush;
-	  cannoli::WritePPMImage(ppm_image, pixel_color);
-	}
-  }
-  std::cerr << "\n Done! \n";
-  ppm_image.close();
+  rt.Trace();
 }

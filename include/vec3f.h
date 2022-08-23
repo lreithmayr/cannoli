@@ -12,16 +12,28 @@ namespace cannoli {
 	Vec3f(float x, float y, float z) : m_vec{x, y, z} {
 	}
 
-	[[nodiscard]] float x() const {
+	[[nodiscard]] float GetX() const {
 	  return m_vec[0];
 	}
 
-	[[nodiscard]] float y() const {
+	void SetX(const float x) {
+	  m_vec[0] = x;
+	}
+
+	[[nodiscard]] float GetY() const {
 	  return m_vec[1];
 	}
 
-	[[nodiscard]] float z() const {
+	void SetY(const float y) {
+	  m_vec[0] = y;
+	}
+
+	[[nodiscard]] float GetZ() const {
 	  return m_vec[2];
+	}
+
+	void SetZ(const float z) {
+	  m_vec[0] = z;
 	}
 
 	float operator[](const int i) const {
@@ -75,5 +87,12 @@ namespace cannoli {
    protected:
 	float m_vec[3];
   };
+
+// Free utility functions (non-member functions)
+
+  Vec3f operator*(const float& f, const Vec3f& vec) {
+	return {f * vec[0], f * vec[1], f * vec[2]};
+  }
+
 }
 #endif //CANNOLI_INCLUDE_VEC3F_H_

@@ -8,15 +8,41 @@ namespace cannoli {
   class LightRay {
    public:
 	LightRay() = default;
-	~LightRay() = default;
+	LightRay(PointXYZ origin, Vec3f dir) : m_origin(origin), m_dir(dir) {};
+	LightRay(PointXYZ origin, Vec3f dir, float t) : m_origin(origin), m_dir(dir), m_time(t) {};
 
-	[[nodiscard]] PointXYZ Position(float t) const {
+	[[nodiscard]] PointXYZ GetOrigin() const {
+	  return m_origin;
+	}
+
+	void SetOrigin(const PointXYZ origin) {
+	  m_origin = origin;
+	}
+
+	[[nodiscard]] PointXYZ GetDirection() const {
+	  return m_dir;
+	}
+
+	void SetDirection(const Vec3f dir) {
+	  m_dir = dir;
+	}
+
+	[[nodiscard]] float GetTime() const {
+	  return m_time;
+	}
+
+	void SetTime(const float t) {
+	  m_time = t;
+	}
+
+	[[nodiscard]] PointXYZ Position(const float t) const {
 	  return (m_origin + m_dir * t);
 	}
 
    protected:
 	PointXYZ m_origin{};
 	Vec3f m_dir{};
+	float m_time{};
 
   };
 }

@@ -10,7 +10,16 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME} SHARED
-        src/light_ray.cpp
+        # Source Files
+        src/ray_tracer.cpp
+        # Header Files
+        include/image.h
+        include/camera.h
+        include/color.h
+        include/light_ray.h
+        include/point.h
+        include/ray_tracer.h
+        include/vec3f.h
 )
 
 # === GOOGLETEST SETUP ===

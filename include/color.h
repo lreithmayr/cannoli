@@ -5,12 +5,12 @@
 #include <fstream>
 
 namespace cannoli {
-  typedef cannoli::Vec3f ColorRGB;
+  typedef Vec3f ColorRGB;
 
   void WritePPMImage(std::ofstream& stream, ColorRGB pixel_color) {
-	stream << static_cast<int>(255.999 * pixel_color.x()) << ' '
-		   << static_cast<int>(255.999 * pixel_color.y()) << ' '
-		   << static_cast<int>(255.999 * pixel_color.z()) << '\n';
+	stream << static_cast<int>(255.999 * pixel_color.GetX()) << ' '
+		   << static_cast<int>(255.999 * pixel_color.GetY()) << ' '
+		   << static_cast<int>(255.999 * pixel_color.GetZ()) << '\n';
   }
 }
 
