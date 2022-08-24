@@ -25,11 +25,7 @@ namespace cannoli {
 	void Trace();
 	void Stop();
 
-	void ProcessScene();
-
-	bool ComputeHit(LightRay& ray);
-
-	void ComputeRayColor(LightRay& ray);
+	void ComputeRayColor(LightRay& ray, Object*& object);
 
    private:
 	Scene m_scene;

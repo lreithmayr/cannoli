@@ -11,14 +11,18 @@ namespace cannoli {
    public:
 	Object() = default;
 
-	OBJECT_TYPE GetType() {
+	void SetType(ObjectType type) {
+	  m_type = type;
+	}
+
+	ObjectType GetType() {
 	  return m_type;
 	}
 
 	virtual bool Hit(const LightRay& ray) = 0;
 
    protected:
-	OBJECT_TYPE m_type{DEFAULT};
+	ObjectType m_type{ObjectType::DEFAULT};
 	Material m_material;
   };
 }  // namespace cannoli

@@ -12,6 +12,12 @@ namespace cannoli {
 	Vec3f(float x, float y, float z) : m_vec{x, y, z} {
 	}
 
+	void SetXYZ(float x, float y, float z) {
+	  m_vec[0] = x;
+	  m_vec[1] = y;
+	  m_vec[2] = z;
+	}
+
 	[[nodiscard]] float GetX() const {
 	  return m_vec[0];
 	}

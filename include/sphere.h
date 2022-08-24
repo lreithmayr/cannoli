@@ -7,7 +7,7 @@ namespace cannoli {
   class Sphere : public Object {
    public:
 	Sphere(Vec3f center, float radius) : m_center(center), m_radius(radius) {
-	  m_type = SPHERE;
+	  m_type = ObjectType::SPHERE;
 	}
 
 	// Solves quadratic equation for a light ray with origin A, direction b and time constant t hitting a sphere with

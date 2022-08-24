@@ -10,7 +10,7 @@
 #define FOCAL_LENGTH 1.0
 
 int main() {
-  std::string out_path = "../images/traced.ppm";
+  std::string out_path = "../images/traced_sphere.ppm";
 
   // Create a camera and a canvas on which to render the scene
   cannoli::Camera camera(ASPECT_RATIO, VIEWPORT_HEIGHT, FOCAL_LENGTH);

@@ -9,7 +9,7 @@ namespace cannoli {
    public:
 	Scene() = default;
 
-	void Add(Object* const object) {
+	void Add(Object* const& object) {
 	  mp_sceneObjects.emplace_back(object);
 	}
 
