@@ -69,5 +69,5 @@ namespace cannoli {
 	const PointXYZ
 		m_viewportLowerLeft;
   };
-}
+}  // namespace cannoli
 #endif //CANNOLI_INCLUDE_CAMERA_H_

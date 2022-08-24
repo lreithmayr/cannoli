@@ -12,6 +12,7 @@ include_directories(
 add_library(${PROJECT_NAME} SHARED
         # Source Files
         src/ray_tracer.cpp
+        src/sphere.cpp
         # Header Files
         include/image.h
         include/camera.h
@@ -20,7 +21,11 @@ add_library(${PROJECT_NAME} SHARED
         include/point.h
         include/ray_tracer.h
         include/vec3f.h
-)
+        include/object.h
+        include/scene.h
+        include/material.h
+        include/sphere.h
+        include/object_type.h)
 
 # === GOOGLETEST SETUP ===
 

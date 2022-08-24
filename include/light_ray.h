@@ -19,7 +19,7 @@ namespace cannoli {
 	  m_origin = origin;
 	}
 
-	[[nodiscard]] PointXYZ GetDirection() const {
+	[[nodiscard]] Vec3f GetDirection() const {
 	  return m_dir;
 	}
 
@@ -45,6 +45,6 @@ namespace cannoli {
 	float m_time{};
 
   };
-}
+}  // namespace cannoli
 
 #endif //CANNOLI_INCLUDE_LIGHT_RAY_H_

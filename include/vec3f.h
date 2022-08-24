@@ -68,10 +68,6 @@ namespace cannoli {
 	  return (std::sqrt(m_vec[0] * m_vec[0] + m_vec[1] * m_vec[1] + m_vec[2] * m_vec[2]));
 	}
 
-	[[nodiscard]] float dot(Vec3f& vec) {
-	  return (m_vec[0] * vec[0] + m_vec[1] * vec[1] + m_vec[2] * vec[2]);
-	}
-
 	[[nodiscard]] Vec3f cross(Vec3f& vec) const {
 	  return {
 		  m_vec[1] * vec[2] - m_vec[2] * vec[1],
@@ -90,9 +86,13 @@ namespace cannoli {
 
 // Free utility functions (non-member functions)
 
-  Vec3f operator*(const float& f, const Vec3f& vec) {
+  inline Vec3f operator*(const float& f, const Vec3f& vec) {
 	return {f * vec[0], f * vec[1], f * vec[2]};
   }
 
-}
+  [[nodiscard]] inline float dot(const Vec3f& vec1, const Vec3f& vec2) {
+	return (vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2]);
+  }
+
+}  // namespace cannoli
 #endif //CANNOLI_INCLUDE_VEC3F_H_

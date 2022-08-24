@@ -4,12 +4,12 @@
 
 
 namespace cannoli {
-  struct Image {
-	Image(float ar, int w): aspect_ratio(ar), width(w) {};
+  struct Canvas {
+	Canvas(float ar, int w): aspect_ratio(ar), width(w) {};
 
 	const float aspect_ratio;
 	const int width;
-	const int height = int(width / aspect_ratio);
+	const int height = static_cast<int>(width / aspect_ratio);
   };
 }
 #endif //CANNOLI_INCLUDE_IMAGE_H_

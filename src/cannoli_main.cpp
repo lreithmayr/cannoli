@@ -1,4 +1,6 @@
 #include "ray_tracer.h"
+#include "object.h"
+#include "sphere.h"
 
 #include <iostream>
 
@@ -10,9 +12,18 @@
 int main() {
   std::string out_path = "../images/traced.ppm";
 
+  // Create a camera and a canvas on which to render the scene
   cannoli::Camera camera(ASPECT_RATIO, VIEWPORT_HEIGHT, FOCAL_LENGTH);
-  cannoli::Image image(ASPECT_RATIO, IMG_WIDTH);
-  cannoli::RayTracer rt(camera, image, out_path);
+  cannoli::Canvas canvas(ASPECT_RATIO, IMG_WIDTH);
 
+  // Create some object(s)
+  cannoli::Sphere sphere(cannoli::Vec3f(0,0,-1), 0.5);
+
+  //Create a scene and add the object(s)
+  cannoli::Scene scene;
+  scene.Add(&sphere);
+
+  // Pass the scene, camera and canvas to the ray tracer and trace away
+  cannoli::RayTracer rt(scene, camera, canvas, out_path);
   rt.Trace();
 }

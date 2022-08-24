@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <vec3f.h>
+#include "vec3f.h"
 
 class Vec3fTest : public ::testing::Test {
  protected:
