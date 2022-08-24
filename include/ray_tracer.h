@@ -25,7 +25,9 @@ namespace cannoli {
 	void Trace();
 	void Stop();
 
-	void ComputeIntersections(LightRay& ray, Object*& object);
+	void ComputeIntersections(LightRay& ray, Object *& object);
+
+	static void WritePPMImage(std::ofstream& stream, ColorRGB pixel_color);
 
    private:
 	Scene m_scene;

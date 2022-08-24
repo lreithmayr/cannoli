@@ -18,7 +18,7 @@ void cannoli::RayTracer::Trace() {
 
 	  LightRay ray(m_camera.GetOrigin(), dir);
 
-	  for (auto object: m_scene.GetObjectList()) {
+	  for (auto object : m_scene.GetObjectList()) {
 		ComputeIntersections(ray, object);
 	  }
 
@@ -28,15 +28,21 @@ void cannoli::RayTracer::Trace() {
   ppm_image.close();
 }
 
-void cannoli::RayTracer::Stop() {
-  m_stopTrace = true;
-}
-
-void cannoli::RayTracer::ComputeIntersections(cannoli::LightRay& ray, cannoli::Object*& object) {
+void cannoli::RayTracer::ComputeIntersections(cannoli::LightRay& ray, cannoli::Object *& object) {
   if (object->Hit(ray)) {
 	return m_pixelColor.SetXYZ(1, 0, 0);
   }
   cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
   auto t = 0.5 * (unit_direction.GetY() + 1.0);
   m_pixelColor = (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
+}
+
+void cannoli::RayTracer::WritePPMImage(std::ofstream& stream, ColorRGB pixel_color) {
+  stream << static_cast<int>(255.999 * pixel_color.GetX()) << ' '
+		 << static_cast<int>(255.999 * pixel_color.GetY()) << ' '
+		 << static_cast<int>(255.999 * pixel_color.GetZ()) << '\n';
+}
+
+void cannoli::RayTracer::Stop() {
+  m_stopTrace = true;
 }
