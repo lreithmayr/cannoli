@@ -19,7 +19,7 @@ void cannoli::RayTracer::Trace() {
 	  LightRay ray(m_camera.GetOrigin(), dir);
 
 	  for (auto object: m_scene.GetObjectList()) {
-		ComputeRayColor(ray, object);
+		ComputeIntersections(ray, object);
 	  }
 
 	  WritePPMImage(ppm_image, m_pixelColor);
@@ -32,7 +32,7 @@ void cannoli::RayTracer::Stop() {
   m_stopTrace = true;
 }
 
-void cannoli::RayTracer::ComputeRayColor(cannoli::LightRay& ray, cannoli::Object*& object) {
+void cannoli::RayTracer::ComputeIntersections(cannoli::LightRay& ray, cannoli::Object*& object) {
   if (object->Hit(ray)) {
 	return m_pixelColor.SetXYZ(1, 0, 0);
   }
