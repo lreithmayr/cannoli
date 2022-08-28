@@ -25,9 +25,8 @@ namespace cannoli {
 		m_outFile(out_fn) {}
 
 	void Trace();
-	void Stop();
 
-	void ComputeIntersections(const LightRay& ray, Object*& object);
+	bool ComputeIntersections(const LightRay& ray, Object*& object);
 
 	static void WritePPMImage(std::ofstream& stream, ColorRGB pixel_color);
 

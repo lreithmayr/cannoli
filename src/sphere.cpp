@@ -24,8 +24,7 @@ bool cannoli::Sphere::Hit(const LightRay& ray, const float t_min, const float t_
   return true;
 }
 
-cannoli::Vec3f cannoli::Sphere::CalculateSurfaceNormal(const cannoli::LightRay& ray, float t, cannoli::HitRecord&
-hit_record) {
+cannoli::Vec3f cannoli::Sphere::CalculateSurfaceNormal(const cannoli::LightRay& ray, float t, HitRecord& hit_record) {
   Vec3f outward_normal = (ray.Position(t) - m_center) * (1 / m_radius);
   if (dot(ray.GetDirection(), outward_normal) < 0) {
 	hit_record.front_face = true;

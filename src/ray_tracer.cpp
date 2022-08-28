@@ -19,36 +19,34 @@ void cannoli::RayTracer::Trace() {
 	  LightRay ray(m_camera.GetOrigin(), dir);
 
 	  for (auto object : m_scene.GetObjectList()) {
-		ComputeIntersections(ray, object);
-	  }
+		if (ComputeIntersections(ray, object))
+		  break;
 
+	  }
 	  WritePPMImage(ppm_image, m_pixelColor);
 	}
   }
   ppm_image.close();
 }
 
-void cannoli::RayTracer::ComputeIntersections(const cannoli::LightRay& ray, cannoli::Object*& object) {
-  HitRecord hit_rec;
-  if (object->Hit(ray, 0, infinity, hit_rec)) {
-	return m_pixelColor.SetXYZ(0.5 * (hit_rec.surface_normal.GetX() + 1), 0.5 * (hit_rec.surface_normal.GetY() + 1),
-							   0.5 *
-								   (hit_rec.surface_normal
-									   .GetZ()
-									   + 1));
+bool cannoli::RayTracer::ComputeIntersections(const cannoli::LightRay& ray, cannoli::Object*& object) {
+  HitRecord hit_record;
+  if (object->Hit(ray, 0, infinity, hit_record)) {
+	m_pixelColor.SetXYZ(
+		0.5 * (hit_record.surface_normal.GetX() + 1),
+		0.5 * (hit_record.surface_normal.GetY() + 1),
+		0.5 * (hit_record.surface_normal.GetZ() + 1)
+	);
+	return true;
   }
   cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
-  hit_rec.t = 0.5 * (unit_direction.GetY() + 1.0);
-  m_pixelColor = (1.0 - hit_rec.t) * ColorRGB(1.0, 1.0, 1.0) + hit_rec.t * ColorRGB(0.5, 0.7, 1.0);
-  std::cout << hit_rec.front_face << "\n";
+  auto t = 0.5 * (unit_direction.GetY() + 1.0);
+  m_pixelColor = (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
+  return false;
 }
 
 void cannoli::RayTracer::WritePPMImage(std::ofstream& stream, ColorRGB pixel_color) {
   stream << static_cast<int>(255.999 * pixel_color.GetX()) << ' '
 		 << static_cast<int>(255.999 * pixel_color.GetY()) << ' '
 		 << static_cast<int>(255.999 * pixel_color.GetZ()) << '\n';
-}
-
-void cannoli::RayTracer::Stop() {
-  m_stopTrace = true;
 }

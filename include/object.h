@@ -17,7 +17,7 @@ namespace cannoli {
 	  m_type = type;
 	}
 
-	ObjectType GetType() {
+	[[nodiscard]] ObjectType GetType() const{
 	  return m_type;
 	}
 
