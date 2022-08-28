@@ -8,6 +8,7 @@
 #include "hit_record.h"
 
 namespace cannoli {
+
   class Object {
    public:
 	Object() = default;
@@ -21,7 +22,6 @@ namespace cannoli {
 	}
 
 	virtual bool Hit(const LightRay& ray, float t_min, float t_max, HitRecord& hit_record) = 0;
-	virtual Vec3f ComputeSurfaceNormal(const float& hit_point, const LightRay& ray) = 0;
 
    protected:
 	ObjectType m_type{ObjectType::DEFAULT};

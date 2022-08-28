@@ -19,11 +19,19 @@ bool cannoli::Sphere::Hit(const LightRay& ray, const float t_min, const float t_
 
   hit_record.t = root;
   hit_record.hit_point = ray.Position(root);
-  hit_record.surf_normal = ComputeSurfaceNormal(hit_record.t, ray);
+  hit_record.surface_normal = CalculateSurfaceNormal(ray, hit_record.t, hit_record);
 
   return true;
 }
 
-cannoli::Vec3f cannoli::Sphere::ComputeSurfaceNormal(const float& t, const LightRay& ray) {
-  return (ray.Position(t) - m_center) * (1 / m_radius);
+cannoli::Vec3f cannoli::Sphere::CalculateSurfaceNormal(const cannoli::LightRay& ray, float t, cannoli::HitRecord&
+hit_record) {
+  Vec3f outward_normal = (ray.Position(t) - m_center) * (1 / m_radius);
+  if (dot(ray.GetDirection(), outward_normal) < 0) {
+	hit_record.front_face = true;
+	return outward_normal;
+  } else {
+	hit_record.front_face = false;
+	return -outward_normal;
+  }
 }

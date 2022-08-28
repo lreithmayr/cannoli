@@ -29,17 +29,18 @@ void cannoli::RayTracer::Trace() {
 }
 
 void cannoli::RayTracer::ComputeIntersections(const cannoli::LightRay& ray, cannoli::Object*& object) {
-  HitRecord hit_record;
-  if (object->Hit(ray, 0, infinity, hit_record)) {
-	return m_pixelColor.SetXYZ(0.5 * (hit_record.surf_normal.GetX() + 1), 0.5 * (hit_record.surf_normal.GetY() + 1),
+  HitRecord hit_rec;
+  if (object->Hit(ray, 0, infinity, hit_rec)) {
+	return m_pixelColor.SetXYZ(0.5 * (hit_rec.surface_normal.GetX() + 1), 0.5 * (hit_rec.surface_normal.GetY() + 1),
 							   0.5 *
-								   (hit_record.surf_normal
+								   (hit_rec.surface_normal
 									   .GetZ()
 									   + 1));
   }
   cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
-  hit_record.t = 0.5 * (unit_direction.GetY() + 1.0);
-  m_pixelColor = (1.0 - hit_record.t) * ColorRGB(1.0, 1.0, 1.0) + hit_record.t * ColorRGB(0.5, 0.7, 1.0);
+  hit_rec.t = 0.5 * (unit_direction.GetY() + 1.0);
+  m_pixelColor = (1.0 - hit_rec.t) * ColorRGB(1.0, 1.0, 1.0) + hit_rec.t * ColorRGB(0.5, 0.7, 1.0);
+  std::cout << hit_rec.front_face << "\n";
 }
 
 void cannoli::RayTracer::WritePPMImage(std::ofstream& stream, ColorRGB pixel_color) {

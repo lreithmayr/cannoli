@@ -15,10 +15,7 @@ namespace cannoli {
 	// t²*b*b + 2t*b*(A-C) + (A-C)*(A-C) - r² <= 0
 	//  a_2 = b*b, a_1 = 2b*(A-C), a_0 = (A-C)(A-C) - r²
 	bool Hit(const LightRay& ray, float t_min, float t_max, HitRecord& hit_record) override;
-
-	// On a sphere, the surface normal vector goes from the center through the hit point
-	Vec3f ComputeSurfaceNormal(const float& t, const LightRay& ray) override;
-
+	Vec3f CalculateSurfaceNormal(const LightRay& ray, float t, HitRecord& hit_record);
 
    protected:
 	PointXYZ m_center;
