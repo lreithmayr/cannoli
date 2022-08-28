@@ -1,12 +1,29 @@
 #include "sphere.h"
 
-bool cannoli::Sphere::Hit(const cannoli::LightRay& ray) {
+bool cannoli::Sphere::Hit(const LightRay& ray, const float t_min, const float t_max, HitRecord& hit_record) {
   Vec3f dist_origin_center = ray.GetOrigin() - m_center; // (A - C)
   auto a_2 = dot(ray.GetDirection(), ray.GetDirection());
   auto a_1 = 2 * dot(dist_origin_center, ray.GetDirection());
   auto a_0 = dot(dist_origin_center, dist_origin_center) - (m_radius * m_radius);
 
-  auto discriminante = a_1 * a_1 - 4 * a_2 * a_0;
+  auto discriminant = a_1 * a_1 - 4 * a_2 * a_0;
+  if (discriminant < 0) return false;
 
-  return (discriminante > 0);
+  auto root = (-a_1 - sqrt(discriminant)) / (2 * a_2);
+  if (root < t_min || root > t_max) {
+	root = (-a_1 + sqrt(discriminant)) / (2 * a_2);
+	if (root < t_min || root > t_max) {
+	  return false;
+	}
+  }
+
+  hit_record.t = root;
+  hit_record.hit_point = ray.Position(root);
+  hit_record.surf_normal = ComputeSurfaceNormal(hit_record.t, ray);
+
+  return true;
+}
+
+cannoli::Vec3f cannoli::Sphere::ComputeSurfaceNormal(const float& t, const LightRay& ray) {
+  return (ray.Position(t) - m_center) * (1 / m_radius);
 }

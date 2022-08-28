@@ -14,6 +14,7 @@ add_library(${PROJECT_NAME} SHARED
         src/ray_tracer.cpp
         src/sphere.cpp
         # Header Files
+        include/common_definitions.h
         include/image.h
         include/camera.h
         include/color.h
@@ -25,7 +26,9 @@ add_library(${PROJECT_NAME} SHARED
         include/scene.h
         include/material.h
         include/sphere.h
-        include/object_type.h)
+        include/object_type.h
+        include/hit_record.h
+        )
 
 # === GOOGLETEST SETUP ===
 

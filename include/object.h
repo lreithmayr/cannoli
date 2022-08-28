@@ -5,6 +5,7 @@
 #include "light_ray.h"
 #include "material.h"
 #include "object_type.h"
+#include "hit_record.h"
 
 namespace cannoli {
   class Object {
@@ -19,7 +20,8 @@ namespace cannoli {
 	  return m_type;
 	}
 
-	virtual bool Hit(const LightRay& ray) = 0;
+	virtual bool Hit(const LightRay& ray, float t_min, float t_max, HitRecord& hit_record) = 0;
+	virtual Vec3f ComputeSurfaceNormal(const float& hit_point, const LightRay& ray) = 0;
 
    protected:
 	ObjectType m_type{ObjectType::DEFAULT};
