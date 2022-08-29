@@ -38,7 +38,7 @@ namespace cannoli {
 		  m_origin(cannoli::PointXYZ(0, 0, 0)),
 		  m_horizontal(cannoli::Vec3f(m_viewportWidth, 0, 0)),
 		  m_vertical(cannoli::Vec3f(0, m_viewportHeight, 0)),
-		  m_viewportLowerLeft(m_origin - m_horizontal*0.5 - m_vertical*0.5 - cannoli::Vec3f(0, 0, m_focalLength)
+		  m_viewportLowerLeft(m_origin - m_horizontal*0.5 - m_vertical*0.5 - Vec3f(0, 0, m_focalLength)
 		  ) {}
 
 	[[nodiscard]] PointXYZ GetOrigin() const {

@@ -1,12 +1,12 @@
 #ifndef CANNOLI_SRC_RAY_TRACER_H_
 #define CANNOLI_SRC_RAY_TRACER_H_
 
-#include "common_definitions.h"
+#include "utils.h"
 #include "light_ray.h"
 #include "vec3f.h"
 #include "color.h"
 #include "point.h"
-#include "image.h"
+#include "canvas.h"
 #include "camera.h"
 #include "object.h"
 #include "scene.h"
@@ -26,9 +26,9 @@ namespace cannoli {
 
 	void Trace();
 
-	bool ComputeIntersections(const LightRay& ray, Object*& object);
+	cannoli::Vec3f ComputeIntersections(const LightRay& ray, int depth);
 
-	static void WritePPMImage(std::ofstream& stream, ColorRGB pixel_color);
+	void WritePPMImage(std::ofstream& stream, int samples);
 
    private:
 	Scene m_scene;

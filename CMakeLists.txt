@@ -14,8 +14,8 @@ add_library(${PROJECT_NAME} SHARED
         src/ray_tracer.cpp
         src/sphere.cpp
         # Header Files
-        include/common_definitions.h
-        include/image.h
+        include/utils.h
+        include/canvas.h
         include/camera.h
         include/color.h
         include/light_ray.h

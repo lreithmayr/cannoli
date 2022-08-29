@@ -9,44 +9,58 @@ void cannoli::RayTracer::Trace() {
   ppm_image.open(m_outFile);
   ppm_image << "P3\n" << m_canvas.width << ' ' << m_canvas.height << "\n255\n";
 
+  const auto samples = 50;
+  int max_depth = 50;
+
   for (int i = m_canvas.height - 1; i >= 0; i--) {
+	std::cout << i << "\n";
 	for (int j = 0; j < m_canvas.width; j++) {
-	  auto v = static_cast<float>(i) / (m_canvas.height - 1);
-	  auto u = static_cast<float>(j) / (m_canvas.width - 1);
-	  Vec3f dir =
-		  m_camera.GetViewportLLC() + m_camera.GetHorizontal() * u + m_camera.GetVertical() * v - m_camera.GetOrigin();
+	  m_pixelColor.SetXYZ(0, 0, 0);
+	  for (int s = 0; s < samples; s++) {
+		auto u = (j + random_float()) / (m_canvas.width - 1);
+		auto v = (i + random_float()) / (m_canvas.height - 1);
+		Vec3f dir = m_camera.GetViewportLLC() + m_camera.GetHorizontal() * u + m_camera.GetVertical() * v
+			- m_camera.GetOrigin();
 
-	  LightRay ray(m_camera.GetOrigin(), dir);
-
-	  for (auto object : m_scene.GetObjectList()) {
-		if (ComputeIntersections(ray, object))
-		  break;
-
+		LightRay ray(m_camera.GetOrigin(), dir);
+		m_pixelColor += ComputeIntersections(ray, max_depth);
 	  }
-	  WritePPMImage(ppm_image, m_pixelColor);
+	  WritePPMImage(ppm_image, samples);
 	}
   }
   ppm_image.close();
 }
 
-bool cannoli::RayTracer::ComputeIntersections(const cannoli::LightRay& ray, cannoli::Object*& object) {
+cannoli::Vec3f cannoli::RayTracer::ComputeIntersections(const cannoli::LightRay& ray, int depth) {
   HitRecord hit_record;
-  if (object->Hit(ray, 0, infinity, hit_record)) {
-	m_pixelColor.SetXYZ(
-		0.5 * (hit_record.surface_normal.GetX() + 1),
-		0.5 * (hit_record.surface_normal.GetY() + 1),
-		0.5 * (hit_record.surface_normal.GetZ() + 1)
-	);
-	return true;
+
+  if (depth <= 0)
+	return ColorRGB(0, 0, 0);
+
+  for (auto object : m_scene.GetObjectList()) {
+	if (object->Hit(ray, 0, infinity, hit_record)) {
+	  PointXYZ target = hit_record.hit_point + hit_record.surface_normal + cannoli::Vec3f::rand_within_unit_sphere();
+	  return 0.5 * ComputeIntersections(cannoli::LightRay(hit_record.hit_point, target - hit_record.hit_point), depth
+	  - 1);
+	}
   }
   cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
   auto t = 0.5 * (unit_direction.GetY() + 1.0);
-  m_pixelColor = (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
-  return false;
+  return (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
 }
 
-void cannoli::RayTracer::WritePPMImage(std::ofstream& stream, ColorRGB pixel_color) {
-  stream << static_cast<int>(255.999 * pixel_color.GetX()) << ' '
-		 << static_cast<int>(255.999 * pixel_color.GetY()) << ' '
-		 << static_cast<int>(255.999 * pixel_color.GetZ()) << '\n';
+void cannoli::RayTracer::WritePPMImage(std::ofstream& stream, int samples) {
+  float r = m_pixelColor.GetX();
+  float g = m_pixelColor.GetY();
+  float b = m_pixelColor.GetZ();
+
+  auto scale = 1.0 / samples;
+
+  r *= scale;
+  g *= scale;
+  b *= scale;
+
+  stream << static_cast<int>(256 * clamp(r, 0.0, 0.999)) << ' '
+		 << static_cast<int>(256 * clamp(g, 0.0, 0.999)) << ' '
+		 << static_cast<int>(256 * clamp(b, 0.0, 0.999)) << '\n';
 }

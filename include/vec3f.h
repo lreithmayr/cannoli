@@ -1,8 +1,11 @@
 #ifndef CANNOLI_INCLUDE_VEC3F_H_
 #define CANNOLI_INCLUDE_VEC3F_H_
 
+#include "utils.h"
+
 #include <cmath>
 #include <iostream>
+#include <array>
 
 namespace cannoli {
   class Vec3f {
@@ -43,7 +46,7 @@ namespace cannoli {
 	}
 
 	float operator[](const int i) const {
-	  return m_vec[i];
+	  return m_vec.at(i);
 	}
 
 	Vec3f operator*(const float& f) const {
@@ -54,8 +57,22 @@ namespace cannoli {
 	  return {m_vec[0] * vec[0], m_vec[1] * vec[1], m_vec[2] * vec[2]};
 	}
 
+	Vec3f& operator*=(const double t) {
+	  m_vec[0] *= t;
+	  m_vec[1] *= t;
+	  m_vec[2] *= t;
+	  return *this;
+	}
+
 	Vec3f operator+(const Vec3f& vec) const {
 	  return {m_vec[0] + vec[0], m_vec[1] + vec[1], m_vec[2] + vec[2]};
+	}
+
+	Vec3f& operator+=(const Vec3f& v) {
+	  m_vec[0] += v[0];
+	  m_vec[1] += v[1];
+	  m_vec[2] += v[2];
+	  return *this;
 	}
 
 	Vec3f operator-() const {
@@ -74,6 +91,10 @@ namespace cannoli {
 	  return (std::sqrt(m_vec[0] * m_vec[0] + m_vec[1] * m_vec[1] + m_vec[2] * m_vec[2]));
 	}
 
+	[[nodiscard]] float length_squared() const {
+	  return (m_vec[0] * m_vec[0] + m_vec[1] * m_vec[1] + m_vec[2] * m_vec[2]);
+	}
+
 	[[nodiscard]] Vec3f cross(Vec3f& vec) const {
 	  return {
 		  m_vec[1] * vec[2] - m_vec[2] * vec[1],
@@ -86,8 +107,26 @@ namespace cannoli {
 	  return (*this * (1 / this->length()));
 	}
 
-   protected:
-	float m_vec[3];
+	inline static Vec3f random() {
+	  return Vec3f{random_float(), random_float(), random_float()};
+	}
+
+	inline static Vec3f random(float min, float max) {
+	  return Vec3f{random_float(min, max), random_float(min, max), random_float(min, max)};
+	}
+
+	static Vec3f rand_within_unit_sphere() {
+	  while (true) {
+		auto p = Vec3f::random(-1, 1);
+		if (p.length_squared() >= 1)
+		  continue;
+		return p;
+	  }
+
+	}
+
+   private:
+	std::array<float, 3> m_vec;
   };
 
 // Free utility functions (non-member functions)

@@ -1,5 +1,5 @@
-#ifndef CANNOLI_INCLUDE_IMAGE_H_
-#define CANNOLI_INCLUDE_IMAGE_H_
+#ifndef CANNOLI_INCLUDE_CANVAS_H_
+#define CANNOLI_INCLUDE_CANVAS_H_
 
 
 
@@ -12,4 +12,4 @@ namespace cannoli {
 	const int height = static_cast<int>(width / aspect_ratio);
   };
 }
-#endif //CANNOLI_INCLUDE_IMAGE_H_
+#endif //CANNOLI_INCLUDE_CANVAS_H_

@@ -8,8 +8,8 @@ class Vec3fTest : public ::testing::Test {
 	delete pVec2;
   }
 
-  cannoli::Vec3f *pVec1 = new cannoli::Vec3f(1.0, 7.0, 3.5);
-  cannoli::Vec3f *pVec2 = new cannoli::Vec3f(2.0, 5.0, 7.23);
+  cannoli::Vec3f* pVec1 = new cannoli::Vec3f(1.0, 7.0, 3.5);
+  cannoli::Vec3f* pVec2 = new cannoli::Vec3f(2.0, 5.0, 7.23);
 
   cannoli::Vec3f vec1 = *pVec1;
   cannoli::Vec3f vec2 = *pVec2;
@@ -29,6 +29,13 @@ TEST_F(Vec3fTest, InitsManually) {
   EXPECT_FLOAT_EQ(vec.GetX(), 1.0);
   EXPECT_FLOAT_EQ(vec.GetY(), 7.0);
   EXPECT_FLOAT_EQ(vec.GetZ(), 3.5);
+}
+
+TEST_F(Vec3fTest, VecElementAccess) {
+  cannoli::Vec3f vec(1.0, 2.0, 3.0);
+  EXPECT_FLOAT_EQ(vec[0], 1.0);
+  EXPECT_FLOAT_EQ(vec[1], 2.0);
+  EXPECT_FLOAT_EQ(vec[2], 3.0);
 }
 
 TEST_F(Vec3fTest, FloatMultiplication) {
@@ -80,8 +87,8 @@ TEST_F(Vec3fTest, VecLength) {
   EXPECT_FLOAT_EQ(vec_len.length(), 7);
 }
 
-TEST_F(Vec3fTest, VecDot) {
-  float vec_dot = vec1.dot(vec2);
+TEST_F(Vec3fTest, VecDotProduct) {
+  float vec_dot = dot(vec1, vec2);
   EXPECT_FLOAT_EQ(vec_dot, 62.305);
 }
 
