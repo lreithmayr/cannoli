@@ -49,26 +49,26 @@ namespace cannoli {
 	  return m_vec.at(i);
 	}
 
-	Vec3f operator*(const float& f) const {
+	Vec3f operator*(const float &f) const {
 	  return {m_vec[0] * f, m_vec[1] * f, m_vec[2] * f};
 	}
 
-	Vec3f operator*(const Vec3f& vec) const {
+	Vec3f operator*(const Vec3f &vec) const {
 	  return {m_vec[0] * vec[0], m_vec[1] * vec[1], m_vec[2] * vec[2]};
 	}
 
-	Vec3f& operator*=(const double t) {
+	Vec3f &operator*=(const double t) {
 	  m_vec[0] *= t;
 	  m_vec[1] *= t;
 	  m_vec[2] *= t;
 	  return *this;
 	}
 
-	Vec3f operator+(const Vec3f& vec) const {
+	Vec3f operator+(const Vec3f &vec) const {
 	  return {m_vec[0] + vec[0], m_vec[1] + vec[1], m_vec[2] + vec[2]};
 	}
 
-	Vec3f& operator+=(const Vec3f& v) {
+	Vec3f &operator+=(const Vec3f &v) {
 	  m_vec[0] += v[0];
 	  m_vec[1] += v[1];
 	  m_vec[2] += v[2];
@@ -79,11 +79,11 @@ namespace cannoli {
 	  return {-m_vec[0], -m_vec[1], -m_vec[2]};
 	}
 
-	Vec3f operator-(const Vec3f& vec) const {
+	Vec3f operator-(const Vec3f &vec) const {
 	  return {m_vec[0] - vec[0], m_vec[1] - vec[1], m_vec[2] - vec[2]};
 	}
 
-	friend std::ostream& operator<<(std::ostream& out, Vec3f& vec) {
+	friend std::ostream &operator<<(std::ostream &out, Vec3f &vec) {
 	  return out << vec[0] << ' ' << vec[1] << ' ' << vec[2];
 	}
 
@@ -95,7 +95,7 @@ namespace cannoli {
 	  return (m_vec[0] * m_vec[0] + m_vec[1] * m_vec[1] + m_vec[2] * m_vec[2]);
 	}
 
-	[[nodiscard]] Vec3f cross(Vec3f& vec) const {
+	[[nodiscard]] Vec3f cross(Vec3f &vec) const {
 	  return {
 		  m_vec[1] * vec[2] - m_vec[2] * vec[1],
 		  m_vec[2] * vec[0] - m_vec[0] * vec[2],
@@ -131,11 +131,11 @@ namespace cannoli {
 
 // Free utility functions (non-member functions)
 
-  inline Vec3f operator*(const float& f, const Vec3f& vec) {
+  inline Vec3f operator*(const float &f, const Vec3f &vec) {
 	return {f * vec[0], f * vec[1], f * vec[2]};
   }
 
-  [[nodiscard]] inline float dot(const Vec3f& vec1, const Vec3f& vec2) {
+  [[nodiscard]] inline float dot(const Vec3f &vec1, const Vec3f &vec2) {
 	return (vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2]);
   }
 

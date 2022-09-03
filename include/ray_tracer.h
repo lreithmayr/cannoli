@@ -17,7 +17,7 @@
 namespace cannoli {
   class RayTracer {
    public:
-	RayTracer(Scene& scene, Camera& camera, Canvas& canvas, std::string& out_fn) :
+	RayTracer(Scene &scene, Camera &camera, Canvas &canvas, std::string &out_fn) :
 		m_scene(scene),
 		m_canvas(canvas),
 		m_camera(camera),
@@ -26,9 +26,9 @@ namespace cannoli {
 
 	void Trace();
 
-	cannoli::Vec3f ComputeIntersections(const LightRay& ray, int depth);
+	ColorRGB ComputeColor(const LightRay &ray, int depth);
 
-	void WritePPMImage(std::ofstream& stream, int samples);
+	void WritePPMImage(std::ofstream &stream, int samples);
 
    private:
 	Scene m_scene;

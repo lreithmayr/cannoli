@@ -7,9 +7,8 @@
 namespace cannoli {
   class LightRay {
    public:
-	LightRay() = default;
-	LightRay(PointXYZ origin, Vec3f dir) : m_origin(origin), m_dir(dir) {};
-	LightRay(PointXYZ origin, Vec3f dir, float t) : m_origin(origin), m_dir(dir), m_time(t) {};
+	LightRay(const PointXYZ &origin, const Vec3f &dir) : m_origin(origin), m_dir(dir) {};
+	LightRay(const PointXYZ &origin, const Vec3f &dir, const float t) : m_origin(origin), m_dir(dir), m_time(t) {};
 
 	[[nodiscard]] PointXYZ GetOrigin() const {
 	  return m_origin;

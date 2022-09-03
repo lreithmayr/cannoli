@@ -9,16 +9,16 @@ namespace cannoli {
    public:
 	Scene() = default;
 
-	void Add(Object* const& object) {
-	  mp_sceneObjects.emplace_back(object);
+	void Add(Object *const &object) {
+	  m_sceneObjects.emplace_back(object);
 	}
 
-	[[nodiscard]] std::vector<Object*> GetObjectList() const {
-	  return mp_sceneObjects;
+	[[nodiscard]] std::vector<Object *> GetObjectList() const {
+	  return m_sceneObjects;
 	};
 
    private:
-	std::vector<Object*> mp_sceneObjects;
+	std::vector<Object *> m_sceneObjects{};
   };
 
 } // namespace cannoli

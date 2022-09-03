@@ -1,6 +1,8 @@
 #include "ray_tracer.h"
 #include "object.h"
 #include "sphere.h"
+#include "material.h"
+#include "lambertian_brdf.h"
 
 #include <iostream>
 
@@ -10,15 +12,19 @@
 #define FOCAL_LENGTH 1.0
 
 int main() {
-  std::string out_path = "../images/diffusion_test.ppm";
+  std::string out_path = "../images/lambertian_refactored.ppm";
 
   // Create a camera and a canvas on which to render the scene
   cannoli::Camera camera(ASPECT_RATIO, VIEWPORT_HEIGHT, FOCAL_LENGTH);
   cannoli::Canvas canvas(ASPECT_RATIO, CANVAS_WIDTH);
 
+  // Create Materials
+
+  cannoli::LambertianBRDF lambertian;
+
   // Create some object(s)
-  cannoli::Sphere sphere(cannoli::Vec3f(0,0,-1), 0.5);
-  cannoli::Sphere sphere2(cannoli::Vec3f(0,-100.5,-1), 100);
+  cannoli::Sphere sphere(cannoli::Vec3f(0, 0, -1), 0.5, &lambertian);
+  cannoli::Sphere sphere2(cannoli::Vec3f(0, -100.5, -1), 100, &lambertian);
 
 
   //Create a scene and add the object(s)

@@ -8,7 +8,7 @@ namespace cannoli {
   struct HitRecord {
 	PointXYZ hit_point;
 	Vec3f surface_normal;
-	float t {};
+	float t{};
 	bool front_face = false;
   };
 } // namespace cannoli

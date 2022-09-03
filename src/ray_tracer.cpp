@@ -13,7 +13,8 @@ void cannoli::RayTracer::Trace() {
   int max_depth = 50;
 
   for (int i = m_canvas.height - 1; i >= 0; i--) {
-	std::cout << i << "\n";
+	auto prog = (static_cast<float>(i) / static_cast<float>(m_canvas.height));
+	cannoli::ProgressBar(1 - prog);
 	for (int j = 0; j < m_canvas.width; j++) {
 	  m_pixelColor.SetXYZ(0, 0, 0);
 	  for (int s = 0; s < samples; s++) {
@@ -23,7 +24,7 @@ void cannoli::RayTracer::Trace() {
 			- m_camera.GetOrigin();
 
 		LightRay ray(m_camera.GetOrigin(), dir);
-		m_pixelColor += ComputeIntersections(ray, max_depth);
+		m_pixelColor += ComputeColor(ray, max_depth);
 	  }
 	  WritePPMImage(ppm_image, samples);
 	}
@@ -31,17 +32,18 @@ void cannoli::RayTracer::Trace() {
   ppm_image.close();
 }
 
-cannoli::Vec3f cannoli::RayTracer::ComputeIntersections(const cannoli::LightRay& ray, int depth) {
+cannoli::ColorRGB cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray, int depth) {
   HitRecord hit_record;
+  float eps = 0.001;
 
   if (depth <= 0)
 	return ColorRGB(0, 0, 0);
 
   for (auto object : m_scene.GetObjectList()) {
-	if (object->Hit(ray, 0, infinity, hit_record)) {
-	  PointXYZ target = hit_record.hit_point + hit_record.surface_normal + cannoli::Vec3f::rand_within_unit_sphere();
-	  return 0.5 * ComputeIntersections(cannoli::LightRay(hit_record.hit_point, target - hit_record.hit_point), depth
-	  - 1);
+	if (object->Hit(ray, eps, infinity, hit_record)) {
+	  PointXYZ target = object->ComputeSurfaceInteraction(ray, hit_record);
+	  LightRay scattered_ray(hit_record.hit_point, target - hit_record.hit_point);
+	  return 0.5 * ComputeColor(scattered_ray, depth - 1);
 	}
   }
   cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
@@ -49,16 +51,16 @@ cannoli::Vec3f cannoli::RayTracer::ComputeIntersections(const cannoli::LightRay&
   return (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
 }
 
-void cannoli::RayTracer::WritePPMImage(std::ofstream& stream, int samples) {
+void cannoli::RayTracer::WritePPMImage(std::ofstream &stream, int samples) {
   float r = m_pixelColor.GetX();
   float g = m_pixelColor.GetY();
   float b = m_pixelColor.GetZ();
 
   auto scale = 1.0 / samples;
 
-  r *= scale;
-  g *= scale;
-  b *= scale;
+  r = sqrt(scale * r);
+  g = sqrt(scale * g);
+  b = sqrt(scale * b);
 
   stream << static_cast<int>(256 * clamp(r, 0.0, 0.999)) << ' '
 		 << static_cast<int>(256 * clamp(g, 0.0, 0.999)) << ' '

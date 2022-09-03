@@ -17,15 +17,15 @@ namespace cannoli {
 	  m_type = type;
 	}
 
-	[[nodiscard]] ObjectType GetType() const{
+	[[nodiscard]] ObjectType GetType() const {
 	  return m_type;
 	}
-
-	virtual bool Hit(const LightRay& ray, float t_min, float t_max, HitRecord& hit_record) = 0;
+	virtual bool Hit(const LightRay &ray, float t_min, float t_max, HitRecord &hit_record) = 0;
+	virtual Vec3f ComputeSurfaceInteraction(const LightRay &ray, HitRecord &hit_record) = 0;
 
    protected:
 	ObjectType m_type{ObjectType::DEFAULT};
-	Material m_material;
+	Material *m_material = nullptr;
   };
 }  // namespace cannoli
 #endif //CANNOLI_INCLUDE_OBJECT_H_

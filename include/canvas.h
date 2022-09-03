@@ -1,11 +1,9 @@
 #ifndef CANNOLI_INCLUDE_CANVAS_H_
 #define CANNOLI_INCLUDE_CANVAS_H_
 
-
-
 namespace cannoli {
   struct Canvas {
-	Canvas(float ar, int w): aspect_ratio(ar), width(w) {};
+	Canvas(float ar, int w) : aspect_ratio(ar), width(w) {};
 
 	const float aspect_ratio;
 	const int width;

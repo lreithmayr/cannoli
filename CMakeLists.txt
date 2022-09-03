@@ -13,6 +13,7 @@ add_library(${PROJECT_NAME} SHARED
         # Source Files
         src/ray_tracer.cpp
         src/sphere.cpp
+        src/lambertian_brdf.cpp
         # Header Files
         include/utils.h
         include/canvas.h
@@ -28,7 +29,7 @@ add_library(${PROJECT_NAME} SHARED
         include/sphere.h
         include/object_type.h
         include/hit_record.h
-        )
+        include/lambertian_brdf.h )
 
 # === GOOGLETEST SETUP ===
 
