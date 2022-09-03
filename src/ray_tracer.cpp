@@ -10,11 +10,12 @@ void cannoli::RayTracer::Trace() {
   ppm_image << "P3\n" << m_canvas.width << ' ' << m_canvas.height << "\n255\n";
 
   const auto samples = 50;
-  int max_depth = 50;
+  int max_bounces = 50;
 
   for (int i = m_canvas.height - 1; i >= 0; i--) {
 	auto prog = (static_cast<float>(i) / static_cast<float>(m_canvas.height));
 	cannoli::ProgressBar(1 - prog);
+
 	for (int j = 0; j < m_canvas.width; j++) {
 	  m_pixelColor.SetXYZ(0, 0, 0);
 	  for (int s = 0; s < samples; s++) {
@@ -24,7 +25,7 @@ void cannoli::RayTracer::Trace() {
 			- m_camera.GetOrigin();
 
 		LightRay ray(m_camera.GetOrigin(), dir);
-		m_pixelColor += ComputeColor(ray, max_depth);
+		m_pixelColor += ComputeColor(ray, max_bounces);
 	  }
 	  WritePPMImage(ppm_image, samples);
 	}
@@ -32,22 +33,21 @@ void cannoli::RayTracer::Trace() {
   ppm_image.close();
 }
 
-cannoli::ColorRGB cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray, int depth) {
+cannoli::ColorRGB cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray, int n_bounces) {
   HitRecord hit_record;
   float eps = 0.001;
 
-  if (depth <= 0)
+  if (n_bounces <= 0)
 	return ColorRGB(0, 0, 0);
 
-  for (auto object : m_scene.GetObjectList()) {
+  for (Object *object : m_scene.GetObjectList()) {
 	if (object->Hit(ray, eps, infinity, hit_record)) {
-	  PointXYZ target = object->ComputeSurfaceInteraction(ray, hit_record);
-	  LightRay scattered_ray(hit_record.hit_point, target - hit_record.hit_point);
-	  return 0.5 * ComputeColor(scattered_ray, depth - 1);
+	  LightRay scattered_ray = object->ComputeSurfaceInteraction(ray, hit_record);
+	  return 0.5 * ComputeColor(scattered_ray, n_bounces - 1);
 	}
   }
   cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
-  auto t = 0.5 * (unit_direction.GetY() + 1.0);
+  float t = 0.5 * (unit_direction.GetY() + 1.0);
   return (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
 }
 

@@ -8,7 +8,7 @@ namespace cannoli {
    public:
 	LambertianBRDF() = default;
 
-	Vec3f Scatter(PointXYZ &hit_point, Vec3f &surf_normal) override;
+	LightRay Scatter(PointXYZ &hit_point, Vec3f &surf_normal) override;
   };
 } // namespace cannoli
 

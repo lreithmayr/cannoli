@@ -26,7 +26,7 @@ namespace cannoli {
 
 	void Trace();
 
-	ColorRGB ComputeColor(const LightRay &ray, int depth);
+	ColorRGB ComputeColor(const LightRay &ray, int n_bounces);
 
 	void WritePPMImage(std::ofstream &stream, int samples);
 

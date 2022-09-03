@@ -35,6 +35,6 @@ cannoli::Vec3f cannoli::Sphere::CalculateSurfaceNormal(const cannoli::LightRay &
   }
 }
 
-cannoli::Vec3f cannoli::Sphere::ComputeSurfaceInteraction(const LightRay &ray, HitRecord &hit_record) {
+cannoli::LightRay cannoli::Sphere::ComputeSurfaceInteraction(const LightRay &ray, HitRecord &hit_record) {
   return m_material->Scatter(hit_record.hit_point, hit_record.surface_normal);
 }

@@ -20,7 +20,7 @@ namespace cannoli {
 	  else if (i == pos) std::cout << ">";
 	  else std::cout << " ";
 	}
-	std::cout << "] " << int(progress * 100.0) << " %\r";
+	std::cout << "] " << static_cast<int>(progress * 100.0) << " %\r";
 	std::cout.flush();
   }
 
