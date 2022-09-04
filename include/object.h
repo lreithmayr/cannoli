@@ -20,6 +20,11 @@ namespace cannoli {
 	[[nodiscard]] ObjectType GetType() const {
 	  return m_type;
 	}
+
+	[[nodiscard]] Material* GetMaterial() {
+	  return m_material;
+	}
+
 	virtual bool Hit(const LightRay &ray, float t_min, float t_max, HitRecord &hit_record) = 0;
 	virtual cannoli::LightRay ComputeSurfaceInteraction(const LightRay &ray, HitRecord &hit_record) = 0;
 

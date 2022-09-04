@@ -29,7 +29,7 @@ add_library(${PROJECT_NAME} SHARED
         include/sphere.h
         include/object_type.h
         include/hit_record.h
-        include/lambertian_brdf.h )
+        include/lambertian_brdf.h src/metal_brdf.cpp include/metal_brdf.h)
 
 # === GOOGLETEST SETUP ===
 
