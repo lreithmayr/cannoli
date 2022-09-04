@@ -3,20 +3,21 @@
 
 #include "point.h"
 #include "light_ray.h"
+#include "color.h"
 
 namespace cannoli {
   class Material {
    public:
 	Material() = default;
 
-	[[nodiscard]] virtual float GetReflectionIntensity() const {
-	  return m_reflectionIntensity;
+	[[nodiscard]] virtual ColorRGB GetAlbedo() const {
+	  return m_albedo;
 	}
 
-	virtual LightRay Scatter(const LightRay &ray_in, PointXYZ &hit_point, Vec3f &surf_normal) = 0;
+	virtual LightRay Scatter(const LightRay &ray_in, const PointXYZ &hit_point, const Vec3f &surf_normal) = 0;
 
    protected:
-	float m_reflectionIntensity = 0.0;
+	ColorRGB m_albedo;
   };
 } // namespace cannoli
 #endif //CANNOLI_INCLUDE_MATERIAL_H_

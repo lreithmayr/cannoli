@@ -6,10 +6,16 @@
 namespace cannoli {
   class MetalBRDF : public Material {
    public:
-	MetalBRDF() = default;
+	explicit MetalBRDF(ColorRGB a) : m_albedo(a) {}
+
+	[[nodiscard]] ColorRGB GetAlbedo() const override {
+	  return m_albedo;
+	}
+
+	LightRay Scatter(const LightRay &ray_in, const PointXYZ &hit_point, const Vec3f &surf_normal) override;
 
    private:
-	float m_metalReflectance;
+	ColorRGB m_albedo;
   };
 
 } // namespace cannoli

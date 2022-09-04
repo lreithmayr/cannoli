@@ -43,8 +43,9 @@ cannoli::ColorRGB cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray,
   for (Object *object : m_scene.GetObjectList()) {
 	if (object->Hit(ray, eps, infinity, hit_record)) {
 	  LightRay scattered_ray = object->ComputeSurfaceInteraction(ray, hit_record);
-	  float albedo = object->GetMaterial()->GetReflectionIntensity();
-	  return albedo * ComputeColor(scattered_ray, n_bounces - 1);
+	  ColorRGB albedo = object->GetMaterial()->GetAlbedo();
+	  ColorRGB base_color = object->GetBaseColor();
+	  return (base_color + albedo) * ComputeColor(scattered_ray, n_bounces - 1);
 	}
   }
   cannoli::Vec3f unit_direction = ray.GetDirection().normalize();

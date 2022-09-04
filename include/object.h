@@ -11,7 +11,7 @@ namespace cannoli {
 
   class Object {
    public:
-	Object() = default;
+	explicit Object() = default;
 
 	void SetType(ObjectType type) {
 	  m_type = type;
@@ -25,12 +25,21 @@ namespace cannoli {
 	  return m_material;
 	}
 
+	[[nodiscard]] ColorRGB GetBaseColor() {
+	  return m_baseColor;
+	}
+
+	void SetBaseColor(const ColorRGB &color) {
+	  m_baseColor = color;
+	}
+
 	virtual bool Hit(const LightRay &ray, float t_min, float t_max, HitRecord &hit_record) = 0;
 	virtual cannoli::LightRay ComputeSurfaceInteraction(const LightRay &ray, HitRecord &hit_record) = 0;
 
    protected:
 	ObjectType m_type{ObjectType::DEFAULT};
 	Material *m_material = nullptr;
+	ColorRGB m_baseColor;
   };
 }  // namespace cannoli
 #endif //CANNOLI_INCLUDE_OBJECT_H_

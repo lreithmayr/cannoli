@@ -10,14 +10,14 @@ namespace cannoli {
    public:
 	LambertianBRDF() = default;
 
-	[[nodiscard]] float GetReflectionIntensity() const override {
-	  return m_lambertianReflectance;
+	[[nodiscard]] ColorRGB GetAlbedo() const override {
+	  return m_lambertianAlbedo;
 	}
 
-	LightRay Scatter(const LightRay &ray_in, PointXYZ &hit_point, Vec3f &surf_normal) override;
+	LightRay Scatter(const LightRay &ray_in, const PointXYZ &hit_point, const Vec3f &surf_normal) override;
 
    private:
-	float m_lambertianReflectance = 0.0;
+	ColorRGB m_lambertianAlbedo;
   };
 } // namespace cannoli
 
