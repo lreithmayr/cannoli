@@ -9,25 +9,22 @@ void cannoli::RayTracer::Trace() {
   ppm_image.open(m_outFile);
   ppm_image << "P3\n" << m_canvas.width << ' ' << m_canvas.height << "\n255\n";
 
-  const auto samples = 50;
-  int max_bounces = 50;
-
   for (int i = m_canvas.height - 1; i >= 0; i--) {
 	auto prog = (static_cast<float>(i) / static_cast<float>(m_canvas.height));
 	cannoli::ProgressBar(1 - prog);
 
 	for (int j = 0; j < m_canvas.width; j++) {
 	  m_pixelColor.SetXYZ(0, 0, 0);
-	  for (int s = 0; s < samples; s++) {
+	  for (int s = 0; s < m_samples; s++) {
 		auto u = (j + random_float()) / (m_canvas.width - 1);
 		auto v = (i + random_float()) / (m_canvas.height - 1);
 		Vec3f dir = m_camera.GetViewportLLC() + m_camera.GetHorizontal() * u + m_camera.GetVertical() * v
 			- m_camera.GetOrigin();
 
 		LightRay ray(m_camera.GetOrigin(), dir);
-		m_pixelColor += ComputeColor(ray, max_bounces);
+		m_pixelColor += ComputeColor(ray, m_maxBounces);
 	  }
-	  WritePPMImage(ppm_image, samples);
+	  WritePPMImage(ppm_image, m_samples);
 	}
   }
   ppm_image.close();
@@ -40,7 +37,7 @@ cannoli::ColorRGB cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray,
   if (n_bounces <= 0)
 	return ColorRGB(0, 0, 0);
 
-  for (Object *object : m_scene.GetObjectList()) {
+  for (auto &object : m_scene.GetObjectList()) {
 	if (object->Hit(ray, eps, infinity, hit_record)) {
 	  LightRay scattered_ray = object->ComputeSurfaceInteraction(ray, hit_record);
 	  ColorRGB albedo = object->GetMaterial()->GetAlbedo();
@@ -64,7 +61,6 @@ void cannoli::RayTracer::WritePPMImage(std::ofstream &stream, int samples) {
   g = sqrt(scale * g);
   b = sqrt(scale * b);
 
-  stream << static_cast<int>(256 * clamp(r, 0.0, 0.999)) << ' '
-		 << static_cast<int>(256 * clamp(g, 0.0, 0.999)) << ' '
+  stream << static_cast<int>(256 * clamp(r, 0.0, 0.999)) << ' ' << static_cast<int>(256 * clamp(g, 0.0, 0.999)) << ' '
 		 << static_cast<int>(256 * clamp(b, 0.0, 0.999)) << '\n';
 }

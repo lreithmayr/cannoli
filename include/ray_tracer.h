@@ -13,16 +13,19 @@
 #include "hit_record.h"
 
 #include <string>
+#include <cassert>
 
 namespace cannoli {
   class RayTracer {
    public:
-	RayTracer(Scene &scene, Camera &camera, Canvas &canvas, std::string &out_fn) :
-		m_scene(scene),
-		m_canvas(canvas),
-		m_camera(camera),
-		m_stopTrace(false),
-		m_outFile(out_fn) {}
+	RayTracer(Scene &scene, Camera &camera, Canvas &canvas, std::string &out_fn, int samples, int max_bounces)
+		: m_scene(scene),
+		  m_canvas(canvas),
+		  m_camera(camera),
+		  m_stopTrace(false),
+		  m_outFile(out_fn),
+		  m_samples(samples),
+		  m_maxBounces(max_bounces) {}
 
 	void Trace();
 
@@ -37,6 +40,8 @@ namespace cannoli {
 	ColorRGB m_pixelColor{};
 	bool m_stopTrace;
 	std::string m_outFile;
+	int m_samples;
+	int m_maxBounces;
   };
 }  // namespace cannoli
 

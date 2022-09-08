@@ -4,6 +4,8 @@
 #include "point.h"
 #include "vec3f.h"
 
+#include <cmath>
+
 // Camera CS:
 // ^ y
 // |
@@ -30,19 +32,44 @@
 namespace cannoli {
   class Camera {
    public:
-	Camera(float ar, float vp_height, float f_length)
+	Camera(float ar, float f_length, float vert_fov, PointXYZ origin, Vec3f view_dir, Vec3f vec_up)
 		: m_aspectRatio(ar),
-		  m_viewportHeight(vp_height),
-		  m_viewportWidth(m_aspectRatio * m_viewportHeight),
 		  m_focalLength(f_length),
-		  m_origin(cannoli::PointXYZ(0, 0, 0)),
-		  m_horizontal(cannoli::Vec3f(m_viewportWidth, 0, 0)),
-		  m_vertical(cannoli::Vec3f(0, m_viewportHeight, 0)),
-		  m_viewportLowerLeft(m_origin - m_horizontal * 0.5 - m_vertical * 0.5 - Vec3f(0, 0, m_focalLength)
-		  ) {}
+		  m_verticalFOV(vert_fov),
+		  m_origin(origin),
+		  m_viewDir(view_dir),
+		  m_vecUp(vec_up) {
+	  InitializeCameraParams();
+	}
+
+	void InitializeCameraParams() {
+	  float theta = m_verticalFOV * 0.017453;
+	  float h = tan(theta * 0.5);
+	  m_viewportHeight = 2.0 * h;
+	  m_viewportWidth = m_aspectRatio * m_viewportHeight;
+	  Vec3f w = (m_origin - m_viewDir).normalize();
+	  Vec3f u = cross(m_vecUp, w).normalize();
+	  Vec3f v = cross(w, u);
+
+	  m_horizontal = m_viewportWidth * u;
+	  m_vertical = m_viewportHeight * v;
+	  m_viewportLowerLeft = m_origin - m_horizontal * 0.5 - m_vertical * 0.5 - w;
+	}
 
 	[[nodiscard]] PointXYZ GetOrigin() const {
 	  return m_origin;
+	}
+
+	void SetOrigin(const PointXYZ &origin) {
+	  m_origin = origin;
+	}
+
+	[[nodiscard]] Vec3f GetViewDirection() const {
+	  return m_viewDir;
+	}
+
+	void SetViewDirection(const Vec3f &view_dir) {
+	  m_viewDir = view_dir;
 	}
 
 	[[nodiscard]] PointXYZ GetViewportLLC() const {
@@ -59,15 +86,18 @@ namespace cannoli {
 
    private:
 	const float m_aspectRatio;
-	const float m_viewportHeight;
-	const float m_viewportWidth;
 	const float m_focalLength;
+	const float m_verticalFOV;
 
-	const PointXYZ m_origin;
-	const Vec3f m_horizontal;
-	const Vec3f m_vertical;
-	const PointXYZ
-		m_viewportLowerLeft;
+	float m_viewportHeight{};
+	float m_viewportWidth{};
+
+	PointXYZ m_origin;
+	Vec3f m_viewDir;
+	Vec3f m_vecUp;
+	Vec3f m_horizontal;
+	Vec3f m_vertical;
+	PointXYZ m_viewportLowerLeft;
   };
 }  // namespace cannoli
 #endif //CANNOLI_INCLUDE_CAMERA_H_

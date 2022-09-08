@@ -6,7 +6,7 @@
 namespace cannoli {
   class MetalBRDF : public Material {
    public:
-	explicit MetalBRDF(ColorRGB a) : m_albedo(a) {}
+	explicit MetalBRDF(ColorRGB a, float fuzz) : m_albedo(a), m_fuzz(fuzz) {}
 
 	[[nodiscard]] ColorRGB GetAlbedo() const override {
 	  return m_albedo;
@@ -16,6 +16,7 @@ namespace cannoli {
 
    private:
 	ColorRGB m_albedo;
+	float m_fuzz;
   };
 
 } // namespace cannoli

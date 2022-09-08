@@ -7,6 +7,8 @@
 #include "object_type.h"
 #include "hit_record.h"
 
+#include <memory>
+
 namespace cannoli {
 
   class Object {
@@ -21,7 +23,7 @@ namespace cannoli {
 	  return m_type;
 	}
 
-	[[nodiscard]] Material* GetMaterial() {
+	[[nodiscard]] std::shared_ptr<Material> GetMaterial() {
 	  return m_material;
 	}
 
@@ -38,7 +40,7 @@ namespace cannoli {
 
    protected:
 	ObjectType m_type{ObjectType::DEFAULT};
-	Material *m_material = nullptr;
+	std::shared_ptr<Material> m_material = nullptr;
 	ColorRGB m_baseColor;
   };
 }  // namespace cannoli
