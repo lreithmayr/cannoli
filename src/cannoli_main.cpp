@@ -14,11 +14,11 @@
 #define VFOV 20.0
 
 // Canvas parameters
-#define CANVAS_WIDTH 1200
+#define CANVAS_WIDTH 800
 
 // Ray tracer parameters
-#define SAMPLES 500
-#define MAX_BOUNCES 50
+#define SAMPLES 32
+#define MAX_BOUNCES 8
 
 // Scene options
 #define SCENE_OBJECT_RANGE 11

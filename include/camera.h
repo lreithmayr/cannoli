@@ -6,29 +6,6 @@
 
 #include <cmath>
 
-// Camera CS:
-// ^ y
-// |
-// |
-// |
-// O------------------> x
-// O = (0,0,0)
-
-// O is in the middle of the camera viewport
-//
-//
-//                       			---------------------------------------|
-// 									|									   |
-// 									|				    ^ y		   		   |
-// 									|				    |		     	   |
-// 									|				    |		           |
-// 									|				    O----> x		   |
-// 									|							           |
-// 									|				                       |
-//									|									   |
-// 									|---------------------------------------
-
-
 namespace cannoli {
   class Camera {
    public:
@@ -40,7 +17,7 @@ namespace cannoli {
 		  m_viewDir(view_dir),
 		  m_vecUp(vec_up) {
 	  InitializeCameraParams();
-	}
+}
 
 	void InitializeCameraParams() {
 	  float theta = m_verticalFOV * 0.017453;
