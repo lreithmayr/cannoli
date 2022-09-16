@@ -35,7 +35,7 @@ namespace cannoli {
 	  m_baseColor = color;
 	}
 
-	virtual bool Hit(const LightRay &ray, float t_min, float t_max, HitRecord &hit_record) = 0;
+	virtual bool Hit(const LightRay &ray, const float &t_min, const float &t_max, HitRecord &hit_record) = 0;
 	virtual cannoli::LightRay ComputeSurfaceInteraction(const LightRay &ray, HitRecord &hit_record) = 0;
 
    protected:

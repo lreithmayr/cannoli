@@ -9,6 +9,7 @@ namespace cannoli {
 	PointXYZ hit_point;
 	Vec3f surface_normal;
 	float t{};
+	float closest{};
 	bool front_face = false;
   };
 } // namespace cannoli

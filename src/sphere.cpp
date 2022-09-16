@@ -1,18 +1,20 @@
 #include "sphere.h"
 
-bool cannoli::Sphere::Hit(const LightRay &ray, const float t_min, const float t_max, HitRecord &hit_record) {
+bool cannoli::Sphere::Hit(const LightRay &ray, const float &t_min, const float &t_max, HitRecord &hit_record) {
   Vec3f dist_origin_center = ray.GetOrigin() - m_center; // (A - C)
-  auto a_2 = dot(ray.GetDirection(), ray.GetDirection());
-  auto a_1 = 2 * dot(dist_origin_center, ray.GetDirection());
-  auto a_0 = dot(dist_origin_center, dist_origin_center) - (m_radius * m_radius);
+  double a_2 = ray.GetDirection().length_squared();
+  double half_a1 = dot(dist_origin_center, ray.GetDirection());
+  double a_0 = dist_origin_center.length_squared() - (m_radius * m_radius);
+  double discriminant = half_a1 * half_a1 - a_2 * a_0;
+  double sqrt_discriminant = std::sqrt(discriminant);
 
-  auto discriminant = a_1 * a_1 - 4 * a_2 * a_0;
-  if (discriminant < 0) return false;
+  if (discriminant < 0)
+	return false;
 
-  auto root = (-a_1 - sqrt(discriminant)) / (2 * a_2);
-  if (root < t_min || root > t_max) {
-	root = (-a_1 + sqrt(discriminant)) / (2 * a_2);
-	if (root < t_min || root > t_max) {
+  auto root = (-half_a1 - sqrt_discriminant) / a_2;
+  if (root < t_min || t_max < root) {
+	root = (-half_a1 + sqrt_discriminant) / a_2;
+	if (root < t_min || t_max < root) {
 	  return false;
 	}
   }

@@ -18,7 +18,7 @@ namespace cannoli {
 	// given center C and radius r
 	// t²*b*b + 2t*b*(A-C) + (A-C)*(A-C) - r² <= 0
 	//  a_2 = b*b, a_1 = 2b*(A-C), a_0 = (A-C)(A-C) - r²
-	bool Hit(const LightRay &ray, float t_min, float t_max, HitRecord &hit_record) override;
+	bool Hit(const LightRay &ray, const float &t_min, const float &t_max, HitRecord &hit_record) override;
 	Vec3f CalculateSurfaceNormal(const LightRay &ray, float t, HitRecord &hit_record);
 	cannoli::LightRay ComputeSurfaceInteraction(const LightRay &ray, HitRecord &hit_record) override;
 

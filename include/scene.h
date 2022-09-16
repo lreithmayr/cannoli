@@ -9,7 +9,7 @@ namespace cannoli {
    public:
 	Scene() = default;
 
-	void Add(std::shared_ptr<Object> &object) {
+	void Add(const std::shared_ptr<Object> &object) {
 	  m_sceneObjects.emplace_back(object);
 	}
 

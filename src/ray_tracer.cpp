@@ -9,6 +9,9 @@ void cannoli::RayTracer::Trace() {
   ppm_image.open(m_outFile);
   ppm_image << "P3\n" << m_canvas.width << ' ' << m_canvas.height << "\n255\n";
 
+  HitRecord hit_record;
+  auto objects_in_scene = m_scene.GetObjectList();
+
   for (int i = m_canvas.height - 1; i >= 0; i--) {
 	auto prog = (static_cast<float>(i) / static_cast<float>(m_canvas.height));
 	cannoli::ProgressBar(1 - prog);
@@ -20,9 +23,8 @@ void cannoli::RayTracer::Trace() {
 		auto v = (i + random_float()) / (m_canvas.height - 1);
 		Vec3f dir = m_camera.GetViewportLLC() + m_camera.GetHorizontal() * u + m_camera.GetVertical() * v
 			- m_camera.GetOrigin();
-
 		LightRay ray(m_camera.GetOrigin(), dir);
-		m_pixelColor += ComputeColor(ray, m_maxBounces);
+		m_pixelColor += ComputeColor(ray, m_maxBounces, hit_record, infinity, objects_in_scene);
 	  }
 	  WritePPMImage(ppm_image, m_samples);
 	}
@@ -30,21 +32,34 @@ void cannoli::RayTracer::Trace() {
   ppm_image.close();
 }
 
-cannoli::ColorRGB cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray, int n_bounces) {
-  HitRecord hit_record;
+cannoli::ColorRGB cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray,
+												   int n_bounces,
+												   HitRecord &hit_record,
+												   float t_max,
+												   std::vector<std::shared_ptr<Object>> &objects_in_scene) {
+  HitRecord temp_hit_record;
+  float closest_so_far = t_max;
   float eps = 0.001;
+  std::shared_ptr<Object> closest_object = nullptr;
 
   if (n_bounces <= 0)
 	return ColorRGB(0, 0, 0);
 
-  for (auto &object : m_scene.GetObjectList()) {
-	if (object->Hit(ray, eps, infinity, hit_record)) {
-	  LightRay scattered_ray = object->ComputeSurfaceInteraction(ray, hit_record);
-	  ColorRGB albedo = object->GetMaterial()->GetAlbedo();
-	  ColorRGB base_color = object->GetBaseColor();
-	  return (base_color + albedo) * ComputeColor(scattered_ray, n_bounces - 1);
+  for (auto &object : objects_in_scene) {
+	if (object->Hit(ray, eps, closest_so_far, temp_hit_record)) {
+	  closest_so_far = temp_hit_record.t;
+	  hit_record = temp_hit_record;
+	  closest_object = object;
 	}
   }
+
+  if (closest_object) {
+	LightRay scattered_ray = closest_object->ComputeSurfaceInteraction(ray, hit_record);
+	ColorRGB albedo = closest_object->GetMaterial()->GetAlbedo();
+	ColorRGB base_color = closest_object->GetBaseColor();
+	return (base_color + albedo) * ComputeColor(scattered_ray, n_bounces - 1, hit_record, closest_so_far, objects_in_scene);
+  }
+
   cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
   float t = 0.5 * (unit_direction.GetY() + 1.0);
   return (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
