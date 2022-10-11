@@ -5,7 +5,7 @@
 #include <fstream>
 
 namespace cannoli {
-  typedef Vec3f ColorRGB;
+typedef Vec3f ColorRGB;
 }
 
 #endif //CANNOLI_INCLUDE_COLOR_H_

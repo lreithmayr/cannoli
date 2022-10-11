@@ -16,37 +16,38 @@
 #include <cassert>
 
 namespace cannoli {
-  class RayTracer {
-   public:
-	RayTracer(Scene &scene, Camera &camera, Canvas &canvas, std::string &out_fn, int samples, int max_bounces)
-		: m_scene(scene),
-		  m_canvas(canvas),
-		  m_camera(camera),
-		  m_stopTrace(false),
-		  m_outFile(out_fn),
-		  m_samples(samples),
-		  m_maxBounces(max_bounces) {}
+class RayTracer {
+ public:
+  RayTracer(Scene &scene, Camera &camera, Canvas &canvas, std::string &out_fn, int samples, int max_bounces)
+	: m_scene(scene),
+	  m_canvas(canvas),
+	  m_camera(camera),
+	  m_stopTrace(false),
+	  m_outFile(out_fn),
+	  m_samples(samples),
+	  m_maxBounces(max_bounces) {}
 
-	void Trace();
+  void Trace();
 
-	ColorRGB ComputeColor(const LightRay &ray,
-						  int n_bounces,
-						  HitRecord &hit_record,
-						  float t_max,
-						  std::vector<std::shared_ptr<Object>> &objects_in_scene);
+  ColorRGB ComputeColor(
+	const LightRay &ray,
+	int n_bounces,
+	HitRecord &hit_record,
+	float t_max,
+	std::vector<std::shared_ptr<Object>> &objects_in_scene);
 
-	void WritePPMImage(std::ofstream &stream, int samples);
+  void WritePPMImage(std::ofstream &stream, int samples);
 
-   private:
-	Scene m_scene;
-	Canvas m_canvas;
-	Camera m_camera;
-	ColorRGB m_pixelColor{};
-	bool m_stopTrace;
-	std::string m_outFile;
-	int m_samples;
-	int m_maxBounces;
-  };
+ private:
+  Scene m_scene;
+  Canvas m_canvas;
+  Camera m_camera;
+  ColorRGB m_pixelColor{};
+  bool m_stopTrace;
+  std::string m_outFile;
+  int m_samples;
+  int m_maxBounces;
+};
 }  // namespace cannoli
 
 #endif //CANNOLI_SRC_RAY_TRACER_H_

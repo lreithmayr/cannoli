@@ -5,12 +5,12 @@
 #include "point.h"
 
 namespace cannoli {
-  struct HitRecord {
-	PointXYZ hit_point;
-	Vec3f surface_normal;
-	float t{};
-	float closest{};
-	bool front_face = false;
-  };
+struct HitRecord {
+  PointXYZ hit_point;
+  Vec3f surface_normal;
+  float t{};
+  float closest{};
+  bool front_face = false;
+};
 } // namespace cannoli
 #endif //CANNOLI_INCLUDE_HIT_RECORD_H_

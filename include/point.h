@@ -4,7 +4,7 @@
 #include "vec3f.h"
 
 namespace cannoli {
-  typedef Vec3f PointXYZ;
+typedef Vec3f PointXYZ;
 }
 
 #endif //CANNOLI_INCLUDE_POINT_H_

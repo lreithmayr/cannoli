@@ -8,8 +8,8 @@ class Vec3fTest : public ::testing::Test {
 	delete pVec2;
   }
 
-  cannoli::Vec3f* pVec1 = new cannoli::Vec3f(1.0, 7.0, 3.5);
-  cannoli::Vec3f* pVec2 = new cannoli::Vec3f(2.0, 5.0, 7.23);
+  cannoli::Vec3f *pVec1 = new cannoli::Vec3f(1.0, 7.0, 3.5);
+  cannoli::Vec3f *pVec2 = new cannoli::Vec3f(2.0, 5.0, 7.23);
 
   cannoli::Vec3f vec1 = *pVec1;
   cannoli::Vec3f vec2 = *pVec2;

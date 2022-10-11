@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.23)
+# set(CMAKE_CXX_COMPILER "/usr/bin/gcc-9")
+
 project(cannoli)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -Wall -O3 -march=native -fconcepts")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native -fconcepts")
 # === PROJECT SETUP ===
 
@@ -16,6 +17,7 @@ add_library(${PROJECT_NAME} SHARED
         src/sphere.cpp
         src/lambertian_brdf.cpp
         src/metal_brdf.cpp
+
         # Header Files
         include/utils.h
         include/canvas.h
@@ -32,7 +34,13 @@ add_library(${PROJECT_NAME} SHARED
         include/object_type.h
         include/hit_record.h
         include/lambertian_brdf.h
-        include/metal_brdf.h)
+        include/metal_brdf.h
+        src/tri_mesh.cpp include/tri_mesh.h)
+
+find_package(pmp)
+target_link_libraries(${PROJECT_NAME}
+        pmp
+        )
 
 # === GOOGLETEST SETUP ===
 
