@@ -9,7 +9,7 @@ class Vec3fTest : public ::testing::Test {
   }
 
   cannoli::Vec3f *pVec1 = new cannoli::Vec3f(1.0, 7.0, 3.5);
-  cannoli::Vec3f *pVec2 = new cannoli::Vec3f(2.0, 5.0, 7.23);
+  cannoli::Vec3f *pVec2 = new cannoli::Vec3f(-2.0, 5.0, 7.23);
 
   cannoli::Vec3f vec1 = *pVec1;
   cannoli::Vec3f vec2 = *pVec2;
@@ -104,4 +104,25 @@ TEST_F(Vec3fTest, VecNormalized) {
   EXPECT_FLOAT_EQ(vec1_normalized[0], vec1[0] * (1 / vec1.length()));
   EXPECT_FLOAT_EQ(vec1_normalized[1], vec1[1] * (1 / vec1.length()));
   EXPECT_FLOAT_EQ(vec1_normalized[2], vec1[2] * (1 / vec1.length()));
+}
+
+TEST_F(Vec3fTest, VecPermute) {
+  cannoli::Vec3f vec1_permuted = cannoli::Permute(vec1, 2, 0, 1);
+  EXPECT_FLOAT_EQ(vec1_permuted[0], vec1[2]);
+  EXPECT_FLOAT_EQ(vec1_permuted[1], vec1[0]);
+  EXPECT_FLOAT_EQ(vec1_permuted[2], vec1[1]);
+}
+
+TEST_F(Vec3fTest, MaxDimension) {
+  int max1 = MaxDimension(vec1);
+  int max2 = MaxDimension(vec2);
+  EXPECT_EQ(max1, 1);
+  EXPECT_EQ(max2, 2);
+}
+
+TEST_F(Vec3fTest, Abs) {
+  cannoli::Vec3f vec_abs = cannoli::Abs(vec2);
+  EXPECT_FLOAT_EQ(vec_abs[0], 2.0);
+  EXPECT_FLOAT_EQ(vec_abs[1], 5.0);
+  EXPECT_FLOAT_EQ(vec_abs[2], 7.23);
 }

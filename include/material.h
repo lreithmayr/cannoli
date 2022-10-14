@@ -11,8 +11,7 @@ class Material {
   Material() = default;
   virtual ~Material() = default;
 
-  [[nodiscard]] virtual ColorRGB GetAlbedo() const
-  {
+  [[nodiscard]] virtual ColorRGB GetAlbedo() const {
 	return m_albedo;
   }
 

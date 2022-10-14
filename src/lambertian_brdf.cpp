@@ -1,10 +1,8 @@
 #include "lambertian_brdf.h"
 
-cannoli::LightRay cannoli::LambertianBRDF::Scatter(
-  const LightRay &ray_in,
-  const PointXYZ &hit_point,
-  const Vec3f &surf_normal)
-{
+cannoli::LightRay cannoli::LambertianBRDF::Scatter(const LightRay &ray_in,
+												   const PointXYZ &hit_point,
+												   const Vec3f &surf_normal) {
   // Vec3f inverse_ray_dir = -ray_in.GetDirection();
 
   // L: Normalized light direction vector pointing from the hit point (at the surface) towards the light direction

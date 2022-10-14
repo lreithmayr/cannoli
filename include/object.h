@@ -17,28 +17,23 @@ class Object {
   explicit Object() = default;
   virtual ~Object() = default;
 
-  void SetType(ObjectType type)
-  {
+  void SetType(ObjectType type) {
 	m_type = type;
   }
 
-  [[nodiscard]] ObjectType GetType() const
-  {
+  [[nodiscard]] ObjectType GetType() const {
 	return m_type;
   }
 
-  [[nodiscard]] std::shared_ptr<Material> GetMaterial()
-  {
+  [[nodiscard]] std::shared_ptr<Material> GetMaterial() {
 	return m_material;
   }
 
-  [[nodiscard]] ColorRGB GetBaseColor()
-  {
+  [[nodiscard]] ColorRGB GetBaseColor() {
 	return m_baseColor;
   }
 
-  void SetBaseColor(const ColorRGB &color)
-  {
+  void SetBaseColor(const ColorRGB &color) {
 	m_baseColor = color;
   }
 

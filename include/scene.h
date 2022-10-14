@@ -1,26 +1,26 @@
 #ifndef CANNOLI_INCLUDE_SCENE_H_
 #define CANNOLI_INCLUDE_SCENE_H_
 
-#include "object.h"
+#include "mesh.h"
+
 #include <vector>
+#include <memory>
 
 namespace cannoli {
 class Scene {
  public:
   Scene() = default;
 
-  void Add(const std::shared_ptr<Object> &object)
-  {
-	m_sceneObjects.emplace_back(object);
+  void Add(const std::shared_ptr<Mesh> &mesh) {
+	m_meshesInScene.emplace_back(mesh);
   }
 
-  [[nodiscard]] std::vector<std::shared_ptr<Object>> GetObjectList() const
-  {
-	return m_sceneObjects;
+  [[nodiscard]] std::vector<std::shared_ptr<Mesh>> GetMeshesInScene() const {
+	return m_meshesInScene;
   };
 
  private:
-  std::vector<std::shared_ptr<Object>> m_sceneObjects{};
+  std::vector<std::shared_ptr<Mesh>> m_meshesInScene{};
 };
 
 } // namespace cannoli

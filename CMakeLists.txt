@@ -1,10 +1,9 @@
 cmake_minimum_required(VERSION 3.23)
-# set(CMAKE_CXX_COMPILER "/usr/bin/gcc-9")
 
 project(cannoli)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native -fconcepts")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native -fconcepts -pthread")
 # === PROJECT SETUP ===
 
 include_directories(
@@ -17,6 +16,7 @@ add_library(${PROJECT_NAME} SHARED
         src/sphere.cpp
         src/lambertian_brdf.cpp
         src/metal_brdf.cpp
+        src/mesh.cpp
 
         # Header Files
         include/utils.h
@@ -35,14 +35,9 @@ add_library(${PROJECT_NAME} SHARED
         include/hit_record.h
         include/lambertian_brdf.h
         include/metal_brdf.h
-        src/tri_mesh.cpp include/tri_mesh.h)
-
-find_package(pmp)
-target_link_libraries(${PROJECT_NAME}
-        pmp
+        include/mesh.h
+        include/obj_file_loader.h
         )
-
-# === GOOGLETEST SETUP ===
 
 include(FetchContent)
 FetchContent_Declare(
@@ -51,9 +46,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+FIND_PACKAGE(Threads REQUIRED)
+
 # === TEST ===
 add_executable(vec3_test ${PROJECT_SOURCE_DIR}/test/vec3f_test.cpp)
-target_link_libraries(vec3_test gtest_main)
+target_link_libraries(vec3_test gtest_main pthread)
 add_test(NAME Vec3Test COMMAND vec3test)
 
 # === RUN ===

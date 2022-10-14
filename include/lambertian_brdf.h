@@ -12,8 +12,7 @@ class LambertianBRDF : public Material {
   explicit LambertianBRDF(ColorRGB &albedo) : m_lambertianAlbedo(albedo) {}
   ~LambertianBRDF() = default;
 
-  [[nodiscard]] ColorRGB GetAlbedo() const override
-  {
+  [[nodiscard]] ColorRGB GetAlbedo() const override {
 	return m_lambertianAlbedo;
   }
 

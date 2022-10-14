@@ -9,8 +9,7 @@ class Material;
 
 class Sphere : public Object {
  public:
-  Sphere(Vec3f center, float radius, std::shared_ptr<Material> &material) : m_center(center), m_radius(radius)
-  {
+  Sphere(Vec3f center, float radius, std::shared_ptr<Material> &material) : m_center(center), m_radius(radius) {
 	m_type = ObjectType::SPHERE;
 	m_material = material;
   }

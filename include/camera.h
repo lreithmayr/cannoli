@@ -9,19 +9,17 @@
 namespace cannoli {
 class Camera {
  public:
-  Camera(float ar, float f_length, float vert_fov, PointXYZ origin, Vec3f view_dir, Vec3f vec_up)
-	: m_aspectRatio(ar),
-	  m_focalLength(f_length),
-	  m_verticalFOV(vert_fov),
-	  m_origin(origin),
-	  m_viewDir(view_dir),
-	  m_vecUp(vec_up)
-  {
+  Camera(float ar, float f_length, float vert_fov, PointXYZ origin, Vec3f view_dir, Vec3f vec_up) :
+	m_aspectRatio(ar),
+	m_focalLength(f_length),
+	m_verticalFOV(vert_fov),
+	m_origin(origin),
+	m_viewDir(view_dir),
+	m_vecUp(vec_up) {
 	InitializeCameraParams();
   }
 
-  void InitializeCameraParams()
-  {
+  void InitializeCameraParams() {
 	float theta = m_verticalFOV * 0.017453;
 	float h = tan(theta * 0.5);
 	m_viewportHeight = 2.0 * h;
@@ -35,38 +33,31 @@ class Camera {
 	m_viewportLowerLeft = m_origin - m_horizontal * 0.5 - m_vertical * 0.5 - w;
   }
 
-  [[nodiscard]] PointXYZ GetOrigin() const
-  {
+  [[nodiscard]] PointXYZ GetOrigin() const {
 	return m_origin;
   }
 
-  void SetOrigin(const PointXYZ &origin)
-  {
+  void SetOrigin(const PointXYZ &origin) {
 	m_origin = origin;
   }
 
-  [[nodiscard]] Vec3f GetViewDirection() const
-  {
+  [[nodiscard]] Vec3f GetViewDirection() const {
 	return m_viewDir;
   }
 
-  void SetViewDirection(const Vec3f &view_dir)
-  {
+  void SetViewDirection(const Vec3f &view_dir) {
 	m_viewDir = view_dir;
   }
 
-  [[nodiscard]] PointXYZ GetViewportLLC() const
-  {
+  [[nodiscard]] PointXYZ GetViewportLLC() const {
 	return m_viewportLowerLeft;
   }
 
-  [[nodiscard]] Vec3f GetHorizontal() const
-  {
+  [[nodiscard]] Vec3f GetHorizontal() const {
 	return m_horizontal;
   }
 
-  [[nodiscard]] Vec3f GetVertical() const
-  {
+  [[nodiscard]] Vec3f GetVertical() const {
 	return m_vertical;
   }
 

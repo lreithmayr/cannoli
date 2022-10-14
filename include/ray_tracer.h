@@ -8,33 +8,31 @@
 #include "point.h"
 #include "canvas.h"
 #include "camera.h"
-#include "object.h"
 #include "scene.h"
 #include "hit_record.h"
+#include "mesh.h"
 
 #include <string>
-#include <cassert>
 
 namespace cannoli {
 class RayTracer {
  public:
-  RayTracer(Scene &scene, Camera &camera, Canvas &canvas, std::string &out_fn, int samples, int max_bounces)
-	: m_scene(scene),
-	  m_canvas(canvas),
-	  m_camera(camera),
-	  m_stopTrace(false),
-	  m_outFile(out_fn),
-	  m_samples(samples),
-	  m_maxBounces(max_bounces) {}
+  RayTracer(Scene &scene, Camera &camera, Canvas &canvas, std::string &out_fn, int samples, int max_bounces) :
+	m_scene(scene),
+	m_canvas(canvas),
+	m_camera(camera),
+	m_stopTrace(false),
+	m_outFile(out_fn),
+	m_samples(samples),
+	m_maxBounces(max_bounces) {}
 
   void Trace();
 
-  ColorRGB ComputeColor(
-	const LightRay &ray,
-	int n_bounces,
-	HitRecord &hit_record,
-	float t_max,
-	std::vector<std::shared_ptr<Object>> &objects_in_scene);
+  ColorRGB ComputeColor(const LightRay &ray,
+						int n_bounces,
+						HitRecord &hit_record,
+						float t_max,
+						std::vector<std::shared_ptr<Mesh>> &meshes_in_scene);
 
   void WritePPMImage(std::ofstream &stream, int samples);
 

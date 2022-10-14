@@ -11,38 +11,31 @@ class LightRay {
   LightRay(const PointXYZ &origin, const Vec3f &dir) : m_origin(origin), m_dir(dir) {};
   LightRay(const PointXYZ &origin, const Vec3f &dir, const float t) : m_origin(origin), m_dir(dir), m_time(t) {};
 
-  [[nodiscard]] PointXYZ GetOrigin() const
-  {
+  [[nodiscard]] PointXYZ GetOrigin() const {
 	return m_origin;
   }
 
-  void SetOrigin(const PointXYZ origin)
-  {
+  void SetOrigin(const PointXYZ origin) {
 	m_origin = origin;
   }
 
-  [[nodiscard]] Vec3f GetDirection() const
-  {
+  [[nodiscard]] Vec3f GetDirection() const {
 	return m_dir;
   }
 
-  void SetDirection(const Vec3f dir)
-  {
+  void SetDirection(const Vec3f dir) {
 	m_dir = dir;
   }
 
-  [[nodiscard]] float GetTime() const
-  {
+  [[nodiscard]] float GetTime() const {
 	return m_time;
   }
 
-  void SetTime(const float t)
-  {
+  void SetTime(const float t) {
 	m_time = t;
   }
 
-  [[nodiscard]] PointXYZ Position(const float t) const
-  {
+  [[nodiscard]] PointXYZ Position(const float t) const {
 	return (m_origin + m_dir * t);
   }
 
