@@ -23,10 +23,16 @@ bool cannoli::Mesh::RayTriangleIntersect(const cannoli::LightRay &ray,
 										 const float &t_max,
 										 cannoli::HitRecord &hit_record,
 										 int &triangle_nr) {
+#ifdef PBR_INTERSECTION
+
   // Get triangle vertices from mesh
-  objl::Vector3 v0 = m_vertices[m_indices[triangle_nr * 3]].Position;
-  objl::Vector3 v1 = m_vertices[m_indices[triangle_nr * 3 + 1]].Position;
-  objl::Vector3 v2 = m_vertices[m_indices[triangle_nr * 3 + 2]].Position;
+  objl::Vector3 v0_objl = m_vertices[m_indices[triangle_nr * 3]].Position;
+  objl::Vector3 v1_objl = m_vertices[m_indices[triangle_nr * 3 + 1]].Position;
+  objl::Vector3 v2_objl = m_vertices[m_indices[triangle_nr * 3 + 2]].Position;
+
+  Vec3f v0 = Vector3ToVec3f(v0_objl);
+  Vec3f v1 = Vector3ToVec3f(v1_objl);
+  Vec3f v2 = Vector3ToVec3f(v2_objl);
 
   // Transform the coordinates of the vertices to the CS of the ray
   // 1) Translate vertices based on the ray origin
@@ -93,9 +99,8 @@ bool cannoli::Mesh::RayTriangleIntersect(const cannoli::LightRay &ray,
 
   float t_scaled = e0 * v0t_sz + e1 * v1t_sz + e2 * v2t_sz;
 
-  if (det < 0 && (t_scaled >= 0 || t_scaled < t_max * det)) {
-	return false;
-  } else if (det > 0 && (t_scaled <= 0 || t_scaled > t_max * det)) {
+  if ((det < 0 && (t_scaled >= 0 || t_scaled < t_max * det)) || (det > 0 && (t_scaled <= 0 || t_scaled > t_max *
+  det))) {
 	return false;
   }
 
@@ -107,7 +112,51 @@ bool cannoli::Mesh::RayTriangleIntersect(const cannoli::LightRay &ray,
 
   hit_record.t = t;
   hit_record.hit_point = ray.Position(t);
+  hit_record.u = u;
+  hit_record.v = v;
 
   return true;
+
+#endif
+
+#ifdef SIMPLE_INTERSECTION
+
+  // Triangle intersection code from https://iquilezles.org/articles/intersectors/
+
+  // Get vertices
+  objl::Vector3 v0_objl = m_vertices[m_indices[triangle_nr * 3]].Position;
+  objl::Vector3 v1_objl = m_vertices[m_indices[triangle_nr * 3 + 1]].Position;
+  objl::Vector3 v2_objl = m_vertices[m_indices[triangle_nr * 3 + 2]].Position;
+
+  // Convert Vector3 to Vec3f
+  // FIXME: Don't do this conversion for every hit call, but rather just once at loading the mesh
+  Vec3f v0 = Vector3ToVec3f(v0_objl);
+  Vec3f v1 = Vector3ToVec3f(v1_objl);
+  Vec3f v2 = Vector3ToVec3f(v2_objl);
+
+  // Define sides
+  Vec3f v1_v0 = v1 - v0;
+  Vec3f v2_v0 = v2 - v0;
+  Vec3f rayOrigin_v0 = ray.GetOrigin() - v0;
+  Vec3f normal = cross(v1_v0, v2_v0);
+  Vec3f q = cross(rayOrigin_v0, ray.GetDirection());
+  float d = 1.0 / dot(ray.GetDirection(), normal);
+  float u = d * dot(-q, v2_v0);
+  float v = d * dot(q, v1_v0);
+  float t = d * dot(-normal, rayOrigin_v0);
+
+  if (u < 0.0 || v < 0.0 || (u + v) > 1.0) {
+	t = -1.0;
+	return false;
+  }
+
+  hit_record.t = t;
+  hit_record.u = u;
+  hit_record.v = v;
+  hit_record.hit_point = ray.Position(t);
+
+  return true;
+
+#endif
 }
 

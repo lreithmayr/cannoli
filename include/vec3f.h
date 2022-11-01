@@ -165,8 +165,9 @@ inline Vec3f Abs(const Vec3f &vec) {
 
 // Inlined functions providing interop with Vector3 struct from objl namespace
 
-[[nodiscard]] inline Vec3f operator-(const objl::Vector3 &left, const Vec3f &right) {
-  return {left.X - right[0], left.Y - right[1], left.Z - right[2]};
+[[nodiscard]] inline Vec3f Vector3ToVec3f(const objl::Vector3 &objl_vector3) {
+  return { objl_vector3.X, objl_vector3.Y, objl_vector3.Z};
 }
+
 }  // namespace cannoli
 #endif //CANNOLI_INCLUDE_VEC3F_H_

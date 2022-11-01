@@ -20,7 +20,7 @@ void cannoli::RayTracer::Trace() {
 		Vec3f dir = m_camera.GetViewportLLC() + m_camera.GetHorizontal() * u + m_camera.GetVertical() * v
 		  - m_camera.GetOrigin();
 		LightRay ray(m_camera.GetOrigin(), dir);
-		m_pixelColor += ComputeColor(ray, m_maxBounces, hit_record, infinity, meshes_in_scene);
+		ComputeColor(ray, m_maxBounces, hit_record, infinity, meshes_in_scene);
 	  }
 	  WritePPMImage(ppm_image, m_samples);
 	}
@@ -28,20 +28,20 @@ void cannoli::RayTracer::Trace() {
   ppm_image.close();
 }
 
-cannoli::ColorRGB cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray,
-												   int n_bounces,
-												   HitRecord &hit_record,
-												   float t_max,
-												   std::vector<std::shared_ptr<Mesh>> &meshes_in_scene) {
+void cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray,
+									  int n_bounces,
+									  HitRecord &hit_record,
+									  float t_max,
+									  std::vector<std::shared_ptr<Mesh>> &meshes_in_scene) {
   HitRecord temp_hit_record;
   float closest_so_far = t_max;
   float eps = 0.001;
   std::shared_ptr<Mesh> closest_mesh = nullptr;
-  bool hit_mesh = false;
+  bool hit_triangle = false;
 
-  if (n_bounces <= 0) {
-	return ColorRGB(0, 0, 0);
-  }
+  // if (n_bounces <= 0) {
+// 	return ColorRGB(0, 0, 0);
+  // }
 
   for (auto &mesh : meshes_in_scene) {
 	for (int i = 0; i < mesh->GetFaceCount(); ++i) {
@@ -49,21 +49,22 @@ cannoli::ColorRGB cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray,
 		closest_so_far = temp_hit_record.t;
 		hit_record = temp_hit_record;
 		closest_mesh = mesh;
-		hit_mesh = true;
+		hit_triangle = true;
 	  }
 
-	  if (hit_mesh) {
+	  if (hit_triangle) {
 		//  LightRay scattered_ray = closest_mesh->ComputeSurfaceInteraction(ray, hit_record);
 		//  ColorRGB albedo = closest_mesh->GetMaterial()->GetAlbedo();
 		//  ColorRGB base_color = closest_mesh->GetBaseColor();
 		//  return (base_color + albedo)
 		//	* ComputeColor(scattered_ray, n_bounces - 1, hit_record, closest_so_far, meshes_in_scene);
-		return ColorRGB(255, 0, 0);
+		m_pixelColor = ColorRGB(255, 0, 0);
+		return;
 	  }
 
 	  cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
 	  float t = 0.5 * (unit_direction.GetY() + 1.0);
-	  return (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
+	  m_pixelColor = (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
 	}
   }
 }

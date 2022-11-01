@@ -11,6 +11,8 @@ struct HitRecord {
   float t{};
   float closest{};
   bool front_face = false;
+  float u{};
+  float v{};
 };
 } // namespace cannoli
 #endif //CANNOLI_INCLUDE_HIT_RECORD_H_

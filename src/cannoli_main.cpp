@@ -7,7 +7,7 @@
 // Camera parameters
 constexpr float ASPECT_RATIO = 3.0 / 2.0;
 constexpr float FOCAL_LENGTH = 1.0;
-constexpr float VFOV = 20.0;
+constexpr float VFOV = 50.0;
 
 // Canvas parameters
 constexpr int CANVAS_WIDTH = 800;
@@ -18,14 +18,15 @@ constexpr int MAX_BOUNCES = 8;
 
 int main() {
   std::string obj_path = "../scenes/cube.obj";
-  std::string out_path = "../images/this_will_not_work.ppm";
+  // std::string obj_path = "../scenes/simple_scene.obj";
+  std::string out_path = "../images/simple_triIntersect.ppm";
 
   // Create a camera and a canvas on which to render the scene
   cannoli::Camera camera(ASPECT_RATIO,
 						 FOCAL_LENGTH,
 						 VFOV,
-						 cannoli::PointXYZ(13.0, 2.0, 3),
-						 cannoli::PointXYZ(0, 0, 0),
+						 cannoli::PointXYZ(0, 3, 2),
+						 cannoli::PointXYZ(1, 0, 0),
 						 cannoli::Vec3f(0, 1, 0));
 
   cannoli::Canvas canvas(ASPECT_RATIO, CANVAS_WIDTH);
@@ -45,3 +46,4 @@ int main() {
   cannoli::RayTracer rt(scene, camera, canvas, out_path, SAMPLES, MAX_BOUNCES);
   rt.Trace();
 }
+

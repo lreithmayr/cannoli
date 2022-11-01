@@ -13,12 +13,14 @@
 #include "mesh.h"
 
 #include <string>
+#include <utility>
 
 namespace cannoli {
 class RayTracer {
  public:
-  RayTracer(Scene &scene, Camera &camera, Canvas &canvas, std::string &out_fn, int samples, int max_bounces) :
-	m_scene(scene),
+  RayTracer(Scene scene, const Camera &camera, const Canvas &canvas, std::string &out_fn, int samples, int
+  max_bounces) :
+	m_scene(std::move(scene)),
 	m_canvas(canvas),
 	m_camera(camera),
 	m_stopTrace(false),
@@ -28,11 +30,11 @@ class RayTracer {
 
   void Trace();
 
-  ColorRGB ComputeColor(const LightRay &ray,
-						int n_bounces,
-						HitRecord &hit_record,
-						float t_max,
-						std::vector<std::shared_ptr<Mesh>> &meshes_in_scene);
+  void ComputeColor(const LightRay &ray,
+					int n_bounces,
+					HitRecord &hit_record,
+					float t_max,
+					std::vector<std::shared_ptr<Mesh>> &meshes_in_scene);
 
   void WritePPMImage(std::ofstream &stream, int samples);
 
