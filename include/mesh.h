@@ -3,16 +3,18 @@
 
 #include "obj_file_loader.h"
 #include "utils.h"
-#include "light_ray.h"
-#include "hit_record.h"
 #include "vec3f.h"
+#include "material.h"
+#include "triangle.h"
 
 #include <string>
+#include <memory>
+#include <vector>
 
 namespace cannoli {
 class Mesh {
  public:
-  explicit Mesh(std::string &obj_fpath);
+  Mesh(const std::string &obj_fpath, const std::shared_ptr<Material> &material);
 
   [[nodiscard]] std::vector<objl::Vertex> GetVertices() const {
 	return m_vertices;
@@ -26,21 +28,26 @@ class Mesh {
 	return m_faceCount;
   }
 
-  bool RayTriangleIntersect(const cannoli::LightRay &ray,
-							const float &t_min,
-							const float &t_max,
-							HitRecord &hit_record,
-							int &triangle_nr);
+  [[nodiscard]] std::shared_ptr<Material> GetMaterial() {
+	return m_meshMaterial;
+  }
+
+  [[nodiscard]] std::shared_ptr<std::vector<Triangle>> GetTriangles() const {
+	return std::shared_ptr<std::vector<Triangle>> m_triangles;
+  }
+
+ private:
+  void ConstructTriangles();
 
  private:
   std::vector<objl::Vertex> m_vertices;
   std::vector<uint> m_indices;
   std::string m_name;
-  objl::Material m_meshMaterial;
+  std::shared_ptr<Material> m_meshMaterial;
 
  private:
   int m_faceCount = 0;
-
+  std::vector<Triangle> m_triangles;
 };
 } // namespace cannoli
 #endif //CANNOLI_SRC_MESH_H_

@@ -1,8 +1,8 @@
 #include "mesh.h"
 
-cannoli::Mesh::Mesh(std::string &obj_fvath) {
+cannoli::Mesh::Mesh(const std::string &obj_fpath, const std::shared_ptr<Material> &material) {
   objl::Loader loader;
-  bool loadout = loader.LoadFile(obj_fvath);
+  bool loadout = loader.LoadFile(obj_fpath);
   if (loadout) {
 	cannoli::LOG("Mesh loaded successfully.");
 
@@ -10,153 +10,30 @@ cannoli::Mesh::Mesh(std::string &obj_fvath) {
 	m_name = mesh.MeshName;
 	m_vertices = mesh.Vertices;
 	m_indices = mesh.Indices;
-	m_meshMaterial = mesh.MeshMaterial;
-
+	m_meshMaterial = material;
 	m_faceCount = m_indices.size() / 3;
+
+	ConstructTriangles();
   } else {
-	cannoli::LOG("Mesh failed to load!");
+	cannoli::ERROR("Mesh failed to load!");
   }
 }
 
-bool cannoli::Mesh::RayTriangleIntersect(const cannoli::LightRay &ray,
-										 const float &t_min,
-										 const float &t_max,
-										 cannoli::HitRecord &hit_record,
-										 int &triangle_nr) {
-#ifdef PBR_INTERSECTION
+void cannoli::Mesh::ConstructTriangles() {
 
-  // Get triangle vertices from mesh
-  objl::Vector3 v0_objl = m_vertices[m_indices[triangle_nr * 3]].Position;
-  objl::Vector3 v1_objl = m_vertices[m_indices[triangle_nr * 3 + 1]].Position;
-  objl::Vector3 v2_objl = m_vertices[m_indices[triangle_nr * 3 + 2]].Position;
 
-  Vec3f v0 = Vector3ToVec3f(v0_objl);
-  Vec3f v1 = Vector3ToVec3f(v1_objl);
-  Vec3f v2 = Vector3ToVec3f(v2_objl);
+  for (int i = 0; i < m_faceCount; ++i) {
+	// Get triangle vertices from mesh and convert them to Vec3f's
+	objl::Vector3 v0_objl = m_vertices[m_indices[i * 3]].Position;
+	objl::Vector3 v1_objl = m_vertices[m_indices[i * 3 + 1]].Position;
+	objl::Vector3 v2_objl = m_vertices[m_indices[i * 3 + 2]].Position;
 
-  // Transform the coordinates of the vertices to the CS of the ray
-  // 1) Translate vertices based on the ray origin
-  cannoli::PointXYZ v0t = v0 - ray.GetOrigin();
-  cannoli::PointXYZ v1t = v1 - ray.GetOrigin();
-  cannoli::PointXYZ v2t = v2 - ray.GetOrigin();
+	Vec3f v0 = Vector3ToVec3f(v0_objl);
+	Vec3f v1 = Vector3ToVec3f(v1_objl);
+	Vec3f v2 = Vector3ToVec3f(v2_objl);
 
-  // TODO: Store kx, ky, kz and s_x, s_y, s_z inside the LightRay class (these values are indevendent of the triangle
-  //  vertices and don't really need to be comvuted for each intersection test
+	cannoli::Triangle tri(v0, v1, v2);
 
-  // 2) Permute the comvonents such that the z-dimension is the one where the absolute value of the ray's direction
-  // is largest
-  int kz = cannoli::MaxDimension(cannoli::Abs(ray.GetDirection()));
-  int kx = kz + 1;
-  if (kx == 3) {
-	kx = 0;
+	m_triangles.push_back(tri);
   }
-  int ky = kx + 1;
-  if (ky == 3) {
-	ky = 0;
-  }
-  cannoli::Vec3f ray_dir_permuted = cannoli::Permute(ray.GetDirection(), kx, ky, kz);
-  v0t = Permute(v0t, kx, ky, kz);
-  v1t = Permute(v1t, kx, ky, kz);
-  v2t = Permute(v2t, kx, ky, kz);
-
-  // 3) Shear transformation to align the ray direction with the +z axis (for now only for x and y coordinates)
-  float ray_dir_permuted_z = ray_dir_permuted.GetZ();
-  float s_x = -ray_dir_permuted.GetX() / ray_dir_permuted_z;
-  float s_y = -ray_dir_permuted.GetY() / ray_dir_permuted_z;
-  float s_z = 1.f / ray_dir_permuted_z;
-
-  float v0t_x = v0t.GetX();
-  float v0t_y = v0t.GetY();
-  float v1t_x = v1t.GetX();
-  float v1t_y = v1t.GetY();
-  float v2t_x = v2t.GetX();
-  float v2t_y = v2t.GetY();
-
-  v0t_x += s_x * v0t.GetZ();
-  v0t_y += s_y * v0t.GetZ();
-  v1t_x += s_x * v1t.GetZ();
-  v1t_y += s_y * v1t.GetZ();
-  v2t_x += s_x * v2t.GetZ();
-  v2t_y += s_y * v2t.GetZ();
-
-  // 4) Compute edge function coefficients
-  float e0 = v1t_x * v2t_y - v1t_y * v2t_x;
-  float e1 = v2t_x * v0t_y - v2t_y * v0t_x;
-  float e2 = v0t_x * v1t_y - v0t_y * v1t_x;
-
-  if ((e0 < 0 || e1 < 0 || e2 < 0) && (e0 > 0 || e1 > 0 || e2 > 0)) {
-	return false;
-  }
-
-  float det = e0 + e1 + e2;
-  if (det == 0.f) {
-	return false;
-  }
-
-  float v0t_sz = v0t.GetZ() * s_z;
-  float v1t_sz = v1t.GetZ() * s_z;
-  float v2t_sz = v2t.GetZ() * s_z;
-
-  float t_scaled = e0 * v0t_sz + e1 * v1t_sz + e2 * v2t_sz;
-
-  if ((det < 0 && (t_scaled >= 0 || t_scaled < t_max * det)) || (det > 0 && (t_scaled <= 0 || t_scaled > t_max *
-  det))) {
-	return false;
-  }
-
-  float invDet = 1 / det;
-  float u = e0 * invDet;
-  float v = e1 * invDet;
-  float w = e2 * invDet;
-  float t = t_scaled * invDet;
-
-  hit_record.t = t;
-  hit_record.hit_point = ray.Position(t);
-  hit_record.u = u;
-  hit_record.v = v;
-
-  return true;
-
-#endif
-
-#ifdef SIMPLE_INTERSECTION
-
-  // Triangle intersection code from https://iquilezles.org/articles/intersectors/
-
-  // Get vertices
-  objl::Vector3 v0_objl = m_vertices[m_indices[triangle_nr * 3]].Position;
-  objl::Vector3 v1_objl = m_vertices[m_indices[triangle_nr * 3 + 1]].Position;
-  objl::Vector3 v2_objl = m_vertices[m_indices[triangle_nr * 3 + 2]].Position;
-
-  // Convert Vector3 to Vec3f
-  // FIXME: Don't do this conversion for every hit call, but rather just once at loading the mesh
-  Vec3f v0 = Vector3ToVec3f(v0_objl);
-  Vec3f v1 = Vector3ToVec3f(v1_objl);
-  Vec3f v2 = Vector3ToVec3f(v2_objl);
-
-  // Define sides
-  Vec3f v1_v0 = v1 - v0;
-  Vec3f v2_v0 = v2 - v0;
-  Vec3f rayOrigin_v0 = ray.GetOrigin() - v0;
-  Vec3f normal = cross(v1_v0, v2_v0);
-  Vec3f q = cross(rayOrigin_v0, ray.GetDirection());
-  float d = 1.0 / dot(ray.GetDirection(), normal);
-  float u = d * dot(-q, v2_v0);
-  float v = d * dot(q, v1_v0);
-  float t = d * dot(-normal, rayOrigin_v0);
-
-  if (u < 0.0 || v < 0.0 || (u + v) > 1.0) {
-	t = -1.0;
-	return false;
-  }
-
-  hit_record.t = t;
-  hit_record.u = u;
-  hit_record.v = v;
-  hit_record.hit_point = ray.Position(t);
-
-  return true;
-
-#endif
 }
-

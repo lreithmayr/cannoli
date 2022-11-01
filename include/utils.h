@@ -30,9 +30,14 @@ void ProgressBar(auto progress) {
   std::cout.flush();
 }
 
-template<class T>
+template<typename T>
 void LOG(T msg) {
   std::cout << msg << "\n";
+}
+
+template <typename T>
+void ERROR(T err_msg) {
+  std::cerr << err_msg << "\n";
 }
 
 // Constants

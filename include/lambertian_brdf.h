@@ -10,7 +10,7 @@ class LambertianBRDF : public Material {
  public:
   LambertianBRDF() = default;
   explicit LambertianBRDF(ColorRGB &albedo) : m_lambertianAlbedo(albedo) {}
-  ~LambertianBRDF() = default;
+  ~LambertianBRDF() override = default;
 
   [[nodiscard]] ColorRGB GetAlbedo() const override {
 	return m_lambertianAlbedo;
@@ -19,7 +19,7 @@ class LambertianBRDF : public Material {
   LightRay Scatter(const LightRay &ray_in, const PointXYZ &hit_point, const Vec3f &surf_normal) override;
 
  private:
-  ColorRGB m_lambertianAlbedo;
+  ColorRGB m_lambertianAlbedo{0.8, 0.8, 0.8};
 };
 } // namespace cannoli
 
