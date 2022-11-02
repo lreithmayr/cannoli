@@ -18,15 +18,16 @@ constexpr int SAMPLES = 32;
 constexpr int MAX_BOUNCES = 8;
 
 int main() {
-  std::string obj_path = "../scenes/cube.obj";
+  // std::string obj_path = "../scenes/cube.obj";
+  std::string obj_path = "../scenes/simple_scene.obj";
   std::string out_path = "../images/cannoli_output.ppm";
 
   // Create a camera and a canvas on which to render the scene
   cannoli::Camera camera(ASPECT_RATIO,
 						 FOCAL_LENGTH,
 						 VFOV,
-						 cannoli::PointXYZ(0, 3, 2),
-						 cannoli::PointXYZ(1, 0, 0),
+						 cannoli::PointXYZ(0, 0, 2),
+						 cannoli::PointXYZ(0, 0, -1),
 						 cannoli::Vec3f(0, 1, 0));
 
   cannoli::Canvas canvas(ASPECT_RATIO, CANVAS_WIDTH);

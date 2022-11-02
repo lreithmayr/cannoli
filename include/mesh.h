@@ -33,10 +33,9 @@ class Mesh {
   }
 
   [[nodiscard]] std::shared_ptr<std::vector<Triangle>> GetTriangles() const {
-	return std::shared_ptr<std::vector<Triangle>> m_triangles;
+	return std::make_shared<std::vector<Triangle>>(m_triangles);
   }
 
- private:
   void ConstructTriangles();
 
  private:
@@ -44,10 +43,10 @@ class Mesh {
   std::vector<uint> m_indices;
   std::string m_name;
   std::shared_ptr<Material> m_meshMaterial;
+  std::vector<Triangle> m_triangles;
 
  private:
   int m_faceCount = 0;
-  std::vector<Triangle> m_triangles;
 };
 } // namespace cannoli
 #endif //CANNOLI_SRC_MESH_H_

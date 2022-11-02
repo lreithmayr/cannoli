@@ -20,8 +20,6 @@ cannoli::Mesh::Mesh(const std::string &obj_fpath, const std::shared_ptr<Material
 }
 
 void cannoli::Mesh::ConstructTriangles() {
-
-
   for (int i = 0; i < m_faceCount; ++i) {
 	// Get triangle vertices from mesh and convert them to Vec3f's
 	objl::Vector3 v0_objl = m_vertices[m_indices[i * 3]].Position;
