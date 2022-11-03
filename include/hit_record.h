@@ -8,7 +8,6 @@ namespace cannoli {
 struct HitRecord {
   PointXYZ hit_point;
   Vec3f surface_normal;
-  int id{0};
   float t{};
   float closest{};
   bool front_face = false;

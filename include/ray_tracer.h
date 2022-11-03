@@ -18,33 +18,23 @@
 namespace cannoli {
 class RayTracer {
  public:
-  RayTracer(Scene scene,
-			const Camera &camera,
-			const Canvas &canvas,
-			std::string &out_fn,
-			int samples,
-			int max_bounces) :
+  RayTracer(Scene scene, const Camera &camera, const Canvas &canvas, std::string &out_fn, int samples, int
+  max_bounces) :
 	m_scene(std::move(scene)),
 	m_canvas(canvas),
 	m_camera(camera),
 	m_stopTrace(false),
 	m_outFile(out_fn),
 	m_samples(samples),
-	m_maxBounces(max_bounces) {
-	SetUp();
-  }
+	m_maxBounces(max_bounces) {}
 
-  void SetUp();
-  void ResetPixel();
-
-  LightRay EmitRay(int pixel_x, int pixel_y);
   void Trace();
 
-  cannoli::ColorRGB ComputeColor(const LightRay &ray,
-								 int n_bounces,
-								 HitRecord &hit_record,
-								 float t_max,
-								 std::vector<Triangle> &triangles);
+  void ComputeColor(const LightRay &ray,
+					int n_bounces,
+					HitRecord &hit_record,
+					float t_max,
+					std::vector<std::shared_ptr<Mesh>> &meshes_in_scene);
 
   void WritePPMImage(std::ofstream &stream, int samples);
 
@@ -52,7 +42,6 @@ class RayTracer {
   Scene m_scene;
   Canvas m_canvas;
   Camera m_camera;
-  std::ofstream m_ppmImage;
   ColorRGB m_pixelColor{};
   bool m_stopTrace;
   std::string m_outFile;

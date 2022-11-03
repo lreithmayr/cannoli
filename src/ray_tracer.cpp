@@ -1,81 +1,72 @@
 #include "ray_tracer.h"
 
 void cannoli::RayTracer::Trace() {
+  std::ofstream ppm_image;
+  ppm_image.open(m_outFile);
+  ppm_image << "P3\n" << m_canvas.width << ' ' << m_canvas.height << "\n255\n";
+
   HitRecord hit_record;
-  auto mesh = m_scene.GetMeshesInScene();
-  std::vector<Triangle> triangles_in_mesh = *mesh[0]->GetTriangles();
+  auto meshes_in_scene = m_scene.GetMeshesInScene();
 
   for (int i = m_canvas.height - 1; i >= 0; --i) {
-	cannoli::ProgressBar(1 - (static_cast<float>(i) / static_cast<float>(m_canvas.height)));
+	auto prog = (static_cast<float>(i) / static_cast<float>(m_canvas.height));
+	cannoli::ProgressBar(1 - prog);
 
 	for (int j = 0; j < m_canvas.width; ++j) {
-	  ResetPixel();
-
+	  m_pixelColor.SetXYZ(0, 0, 0);
 	  for (int s = 0; s < m_samples; ++s) {
-		LightRay ray = EmitRay(j, i);
-		m_pixelColor += ComputeColor(ray, m_maxBounces, hit_record, infinity, triangles_in_mesh);
+		auto u = (j + random_float()) / (m_canvas.width - 1);
+		auto v = (i + random_float()) / (m_canvas.height - 1);
+		Vec3f dir = m_camera.GetViewportLLC() + m_camera.GetHorizontal() * u + m_camera.GetVertical() * v
+		  - m_camera.GetOrigin();
+		LightRay ray(m_camera.GetOrigin(), dir);
+		ComputeColor(ray, m_maxBounces, hit_record, infinity, meshes_in_scene);
 	  }
-
-	  WritePPMImage(m_ppmImage, m_samples);
+	  WritePPMImage(ppm_image, m_samples);
 	}
   }
-  m_ppmImage.close();
+  ppm_image.close();
 }
 
-void cannoli::RayTracer::SetUp() {
-  m_ppmImage.open(m_outFile);
-  m_ppmImage << "P3\n" << m_canvas.width << ' ' << m_canvas.height << "\n255\n";
-}
-
-void cannoli::RayTracer::ResetPixel() {
-  m_pixelColor.SetXYZ(0, 0, 0);
-}
-
-cannoli::LightRay cannoli::RayTracer::EmitRay(int pixel_x, int pixel_y) {
-  auto u = (pixel_x + random_float()) / (m_canvas.width - 1);
-  auto v = (pixel_y + random_float()) / (m_canvas.height - 1);
-  Vec3f dir = m_camera.GetViewportLLC() + m_camera.GetHorizontal() * u + m_camera.GetVertical() * v
-	- m_camera.GetOrigin();
-  cannoli::LightRay ray(m_camera.GetOrigin(), dir);
-  return ray;
-}
-
-cannoli::ColorRGB cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray,
-												   int n_bounces,
-												   HitRecord &hit_record,
-												   float t_max,
-												   std::vector<Triangle> &triangles) {
+void cannoli::RayTracer::ComputeColor(const cannoli::LightRay &ray,
+									  int n_bounces,
+									  HitRecord &hit_record,
+									  float t_max,
+									  std::vector<std::shared_ptr<Mesh>> &meshes_in_scene) {
   HitRecord temp_hit_record;
   float closest_so_far = t_max;
   float eps = 0.001;
-  Triangle closest_triangle;
+  std::shared_ptr<Mesh> closest_mesh = nullptr;
   bool hit_triangle = false;
 
-  if (n_bounces <= 0) {
-	return ColorRGB(0, 0, 0);
-  }
+  // if (n_bounces <= 0) {
+// 	return ColorRGB(0, 0, 0);
+  // }
 
-  // Iterate through all triangles in the mesh and check for a hit
-  for (auto &triangle : triangles) {
-	if (triangle.Hit(ray, eps, closest_so_far, temp_hit_record)) {
-	  closest_so_far = temp_hit_record.t;
-	  hit_record = temp_hit_record;
-	  closest_triangle = triangle;
-	  hit_triangle = true;
+  for (auto &mesh : meshes_in_scene) {
+	for (int i = 0; i < mesh->GetFaceCount(); ++i) {
+	  if (mesh->RayTriangleIntersect(ray, eps, closest_so_far, temp_hit_record, i)) {
+		closest_so_far = temp_hit_record.t;
+		hit_record = temp_hit_record;
+		closest_mesh = mesh;
+		hit_triangle = true;
+	  }
+
+	  if (hit_triangle) {
+		//  LightRay scattered_ray = closest_mesh->ComputeSurfaceInteraction(ray, hit_record);
+		//  ColorRGB albedo = closest_mesh->GetMaterial()->GetAlbedo();
+		//  ColorRGB base_color = closest_mesh->GetBaseColor();
+		//  return (base_color + albedo)
+		//	* ComputeColor(scattered_ray, n_bounces - 1, hit_record, closest_so_far, meshes_in_scene);
+		m_pixelColor = ColorRGB(255, 0, 0);
+		return;
+	  }
+
+	  cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
+	  float t = 0.5 * (unit_direction.GetY() + 1.0);
+	  m_pixelColor = (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
 	}
   }
-
-  // Have the ray interact with the triangle
-  if (hit_triangle) {
-	LightRay scattered_ray = closest_triangle.ComputeSurfaceInteraction(ray, hit_record);
-	ColorRGB albedo = closest_triangle.GetMaterial()->GetAlbedo();
-	return albedo * ComputeColor(scattered_ray, n_bounces - 1, hit_record, closest_so_far, triangles);
-  }
-
-  // In case of no hit, return a uniform background color
-  cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
-  float t = 0.5 * (unit_direction.GetY() + 1.0);
-  return (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
 }
 
 void cannoli::RayTracer::WritePPMImage(std::ofstream &stream, int samples) {

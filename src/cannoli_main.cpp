@@ -1,5 +1,4 @@
 #include "ray_tracer.h"
-#include "lambertian_brdf.h"
 
 #include <iostream>
 #include <cmath>
@@ -20,24 +19,25 @@ constexpr int MAX_BOUNCES = 8;
 int main() {
   std::string obj_path = "../scenes/cube.obj";
   // std::string obj_path = "../scenes/simple_scene.obj";
-  std::string out_path = "../images/cannoli_output.ppm";
+  std::string out_path = "../images/simple_triIntersect.ppm";
 
   // Create a camera and a canvas on which to render the scene
   cannoli::Camera camera(ASPECT_RATIO,
 						 FOCAL_LENGTH,
 						 VFOV,
-						 cannoli::PointXYZ(0, -1, 2),
-						 cannoli::PointXYZ(2.5, 1, -1.5),
+						 cannoli::PointXYZ(0, 3, 2),
+						 cannoli::PointXYZ(1, 0, 0),
 						 cannoli::Vec3f(0, 1, 0));
 
   cannoli::Canvas canvas(ASPECT_RATIO, CANVAS_WIDTH);
 
-  // Create mesh material
-  cannoli::ColorRGB color(1, 0.8, 0.8);
-  auto mesh_material = std::make_shared<cannoli::LambertianBRDF>(color);
-
   // Load the mesh from the .obj file
-  auto mesh = std::make_shared<cannoli::Mesh>(obj_path, mesh_material);
+  auto mesh = std::make_shared<cannoli::Mesh>(obj_path);
+
+  // for (int j = 0; j < mesh->GetIndices().size(); j += 3) {
+  // 	std::cout << "T" << j / 3 << ": " << mesh->GetIndices()[j] << ", " << mesh->GetIndices()[j + 1] << ", "
+  // 			  << mesh->GetIndices()[j + 2] << "\n";
+  // }
 
   cannoli::Scene scene;
   scene.Add(mesh);

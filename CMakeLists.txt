@@ -17,7 +17,6 @@ add_library(${PROJECT_NAME} SHARED
         src/lambertian_brdf.cpp
         src/metal_brdf.cpp
         src/mesh.cpp
-        src/triangle.cpp
 
         # Header Files
         include/utils.h
@@ -38,7 +37,7 @@ add_library(${PROJECT_NAME} SHARED
         include/metal_brdf.h
         include/mesh.h
         include/obj_file_loader.h
-        include/triangle.h)
+        )
 
 include(FetchContent)
 FetchContent_Declare(
