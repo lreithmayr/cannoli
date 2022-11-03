@@ -8,6 +8,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -march=native -fconcepts -pthr
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/include
+        ${EIGEN3_INCLUDE_DIR}
 )
 
 add_library(${PROJECT_NAME} SHARED
@@ -37,7 +38,9 @@ add_library(${PROJECT_NAME} SHARED
         include/metal_brdf.h
         include/mesh.h
         include/obj_file_loader.h
-        )
+)
+
+# === DEPENDENCIES ===
 
 include(FetchContent)
 FetchContent_Declare(
@@ -46,7 +49,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-FIND_PACKAGE(Threads REQUIRED)
+list(APPEND CMAKE_INCLUDE_PATH "/usr/local/include")
+FIND_PACKAGE(
+        Threads REQUIRED
+)
+
+FIND_PACKAGE(
+        Threads REQUIRED
+)
 
 # === TEST ===
 add_executable(vec3_test ${PROJECT_SOURCE_DIR}/test/vec3f_test.cpp)
@@ -57,4 +67,5 @@ add_test(NAME Vec3Test COMMAND vec3test)
 add_executable(cannoli_main ${PROJECT_SOURCE_DIR}/src/cannoli_main.cpp)
 target_link_libraries(
         cannoli_main ${PROJECT_NAME}
+        ${EIGEN3_LIBS}
 )

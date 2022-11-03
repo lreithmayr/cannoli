@@ -147,6 +147,8 @@ class Vec3f {
   return {vec[x], vec[y], vec[z]};
 }
 
+// inline Vec3f
+
 // Returns the index of the largest value in the vector
 inline int MaxDimension(const Vec3f &vec) {
   int max = 0;
@@ -166,7 +168,7 @@ inline Vec3f Abs(const Vec3f &vec) {
 // Inlined functions providing interop with Vector3 struct from objl namespace
 
 [[nodiscard]] inline Vec3f Vector3ToVec3f(const objl::Vector3 &objl_vector3) {
-  return { objl_vector3.X, objl_vector3.Y, objl_vector3.Z};
+  return {objl_vector3.X, objl_vector3.Y, objl_vector3.Z};
 }
 
 }  // namespace cannoli

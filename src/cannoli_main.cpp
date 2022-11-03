@@ -33,8 +33,6 @@ int main() {
   cannoli::Canvas canvas(ASPECT_RATIO, CANVAS_WIDTH);
 
   // Make material
-  cannoli::ColorRGB light_blue(0.02,0.8,0.98);
-  std::shared_ptr<cannoli::Material> lambertian = std::make_shared<cannoli::LambertianBRDF>(light_blue);
 
   cannoli::Scene scene;
 
@@ -48,6 +46,8 @@ int main() {
   }
 
   for (auto &msh: loader.LoadedMeshes) {
+	cannoli::ColorRGB random_color = cannoli::ColorRGB::random(0.2, 0.9);
+	std::shared_ptr<cannoli::Material> lambertian = std::make_shared<cannoli::LambertianBRDF>(random_color);
 	cannoli::Mesh mesh(msh, lambertian);
 	scene.Add(std::make_shared<cannoli::Mesh>(mesh));
   }
