@@ -1,21 +1,12 @@
 #include "mesh.h"
 
-cannoli::Mesh::Mesh(std::string &obj_fvath) {
-  objl::Loader loader;
-  bool loadout = loader.LoadFile(obj_fvath);
-  if (loadout) {
-	cannoli::LOG("Mesh loaded successfully.");
-
-	objl::Mesh mesh = loader.LoadedMeshes[0];
+cannoli::Mesh::Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material) {
 	m_name = mesh.MeshName;
 	m_vertices = mesh.Vertices;
 	m_indices = mesh.Indices;
-	m_meshMaterial = mesh.MeshMaterial;
+	m_meshMaterial = material;
 
 	m_faceCount = m_indices.size() / 3;
-  } else {
-	cannoli::LOG("Mesh failed to load!");
-  }
 }
 
 bool cannoli::Mesh::RayTriangleIntersect(const cannoli::LightRay &ray,
@@ -110,10 +101,15 @@ bool cannoli::Mesh::RayTriangleIntersect(const cannoli::LightRay &ray,
   float w = e2 * invDet;
   float t = t_scaled * invDet;
 
+  Vec3f v1_v0 = v1 - v0;
+  Vec3f v2_v0 = v2 - v0;
+  Vec3f normal = cross(v1_v0, v2_v0);
+
   hit_record.t = t;
   hit_record.hit_point = ray.Position(t);
   hit_record.u = u;
   hit_record.v = v;
+  hit_record.surface_normal = normal;
 
   return true;
 
@@ -160,3 +156,7 @@ bool cannoli::Mesh::RayTriangleIntersect(const cannoli::LightRay &ray,
 #endif
 }
 
+cannoli::LightRay cannoli::Mesh::ComputeSurfaceInteraction(const cannoli::LightRay &ray, const cannoli::HitRecord
+&hit_record) {
+	return m_meshMaterial->Scatter(ray, hit_record.hit_point, hit_record.surface_normal);
+}

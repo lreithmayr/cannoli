@@ -30,11 +30,11 @@ class RayTracer {
 
   void Trace();
 
-  void ComputeColor(const LightRay &ray,
-					int n_bounces,
-					HitRecord &hit_record,
-					float t_max,
-					std::vector<std::shared_ptr<Mesh>> &meshes_in_scene);
+  cannoli::ColorRGB ComputeColor(const LightRay &ray,
+								 int n_bounces,
+								 HitRecord &hit_record,
+								 float t_max,
+								 std::vector<std::shared_ptr<Mesh>> &meshes_in_scene);
 
   void WritePPMImage(std::ofstream &stream, int samples);
 
