@@ -38,7 +38,7 @@ add_library(${PROJECT_NAME} SHARED
         include/metal_brdf.h
         include/mesh.h
         include/obj_file_loader.h
-)
+        )
 
 # === DEPENDENCIES ===
 
@@ -49,9 +49,9 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-list(APPEND CMAKE_INCLUDE_PATH "/usr/local/include")
+#list(APPEND CMAKE_INCLUDE_PATH "/usr/local/include")
 FIND_PACKAGE(
-        Threads REQUIRED
+Eigen3 3.4 REQUIRED NO_MODULE
 )
 
 FIND_PACKAGE(
@@ -66,6 +66,5 @@ add_test(NAME Vec3Test COMMAND vec3test)
 # === RUN ===
 add_executable(cannoli_main ${PROJECT_SOURCE_DIR}/src/cannoli_main.cpp)
 target_link_libraries(
-        cannoli_main ${PROJECT_NAME}
-        ${EIGEN3_LIBS}
+        cannoli_main ${PROJECT_NAME} Eigen3::Eigen
 )

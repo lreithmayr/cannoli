@@ -147,7 +147,13 @@ class Vec3f {
   return {vec[x], vec[y], vec[z]};
 }
 
-// inline Vec3f
+inline Vec3f YawPitchToXYZ(const float &yaw, const float &pitch) {
+  float cos_pitch = cos(pitch);
+  float x = cos(yaw) * cos_pitch;
+  float y = sin(yaw) * cos_pitch;
+  float z = sin(pitch);
+  return {x, y, z};
+}
 
 // Returns the index of the largest value in the vector
 inline int MaxDimension(const Vec3f &vec) {
