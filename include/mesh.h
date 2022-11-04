@@ -34,6 +34,10 @@ class Mesh {
 	return m_meshMaterial;
   }
 
+  [[nodiscard]] std::shared_ptr<AABB> GetAABB() const {
+	return std::make_shared<AABB>(m_bbox);
+  }
+
   bool RayTriangleIntersect(LightRay &ray,
 							const float &t_min,
 							const float &t_max,
@@ -41,6 +45,7 @@ class Mesh {
 							int triangle_nr);
 
   LightRay ComputeSurfaceInteraction(const LightRay &ray, const HitRecord &hit_record);
+  void ComputeAABB();
 
  private:
   std::vector<cannoli::Vec3f> m_vertices;

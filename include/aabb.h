@@ -21,7 +21,7 @@ class AABB {
 	m_pMin(std::min(p1.GetX(), p2.GetX()), std::min(p1.GetY(), p2.GetY()), std::min(p1.GetZ(), p2.GetZ())),
 	m_pMax(std::max(p1.GetX(), p2.GetX()), std::max(p1.GetY(), p2.GetY()), std::max(p1.GetZ(), p2.GetZ())) {};
 
-  bool AABBIntersection(const LightRay &ray, float t_min, float t_max, HitRecord &hit_record);
+  bool AABBIntersection(const LightRay &ray, float t_min, float t_max);
  private:
   PointXYZ m_pMin{}, m_pMax{};
 };

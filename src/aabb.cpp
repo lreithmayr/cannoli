@@ -1,6 +1,6 @@
 #include "aabb.h"
 
-bool cannoli::AABB::AABBIntersection(const LightRay &ray, float t_min, float t_max, HitRecord &hit_record) {
+bool cannoli::AABB::AABBIntersection(const LightRay &ray, float t_min, float t_max) {
   for (int a = 0; a < 3; a++) {
 	auto inverse_dir = 1.0f / ray.GetDirection()[a];
 	auto t0 = (m_pMin[a] - ray.GetOrigin()[a]) * inverse_dir;
