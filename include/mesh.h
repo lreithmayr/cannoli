@@ -16,7 +16,7 @@ class Mesh {
  public:
   explicit Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material);
 
-  [[nodiscard]] std::vector<objl::Vertex> GetVertices() const {
+  [[nodiscard]] std::vector<Vec3f> GetVertices() const {
 	return m_vertices;
   }
 
@@ -32,7 +32,7 @@ class Mesh {
 	return m_meshMaterial;
   }
 
-  bool RayTriangleIntersect(const LightRay &ray,
+  bool RayTriangleIntersect(LightRay &ray,
 							const float &t_min,
 							const float &t_max,
 							HitRecord &hit_record,
@@ -41,7 +41,7 @@ class Mesh {
   LightRay ComputeSurfaceInteraction(const LightRay &ray, const HitRecord &hit_record);
 
  private:
-  std::vector<objl::Vertex> m_vertices;
+  std::vector<cannoli::Vec3f> m_vertices;
   std::vector<uint> m_indices;
   std::string m_name;
   std::shared_ptr<Material> m_meshMaterial;

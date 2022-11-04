@@ -38,7 +38,7 @@ add_library(${PROJECT_NAME} SHARED
         include/metal_brdf.h
         include/mesh.h
         include/obj_file_loader.h
-        )
+        src/accel_structs.cpp src/accel_structs.h)
 
 # === DEPENDENCIES ===
 

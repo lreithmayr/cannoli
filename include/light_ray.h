@@ -3,6 +3,7 @@
 
 #include "vec3f.h"
 #include "point.h"
+#include <array>
 
 namespace cannoli {
 class LightRay {
@@ -35,16 +36,33 @@ class LightRay {
 	m_time = t;
   }
 
+  [[nodiscard]] std::array<int, 3> GetKVals() {
+	return { m_kx, m_ky, m_kz };
+  }
+
   [[nodiscard]] PointXYZ Position(const float t) const {
 	return (m_origin + m_dir * t);
+  }
+
+  Vec3f PermuteDirection() {
+	m_kz = cannoli::MaxDimension(cannoli::Abs(m_dir));
+	m_kx = m_kz + 1;
+	if (m_kx == 3) {
+	  m_kx = 0;
+	}
+	m_ky = m_kx + 1;
+	if (m_ky == 3) {
+	  m_ky = 0;
+	}
+	return Permute(m_dir, m_kx, m_ky, m_kz);
   }
 
  protected:
   PointXYZ m_origin{};
   Vec3f m_dir{};
   float m_time{};
+  int m_kx{}, m_ky{}, m_kz{};
 
 };
 }  // namespace cannoli
-
 #endif //CANNOLI_INCLUDE_LIGHT_RAY_H_

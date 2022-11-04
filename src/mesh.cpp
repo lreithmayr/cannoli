@@ -2,28 +2,26 @@
 
 cannoli::Mesh::Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material) {
 	m_name = mesh.MeshName;
-	m_vertices = mesh.Vertices;
+
+	// Convert the vertex positions from objl's Vector3 format to Vec3f
+	for (const auto &v: mesh.Vertices) {
+		m_vertices.push_back(cannoli::Vector3ToVec3f(v.Position));
+	};
 	m_indices = mesh.Indices;
 	m_meshMaterial = material;
-
 	m_faceCount = m_indices.size() / 3;
 }
 
-bool cannoli::Mesh::RayTriangleIntersect(const cannoli::LightRay &ray,
+bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
 										 const float &t_min,
 										 const float &t_max,
 										 cannoli::HitRecord &hit_record,
 										 int &triangle_nr) {
-#ifdef PBR_INTERSECTION
 
   // Get triangle vertices from mesh
-  objl::Vector3 v0_objl = m_vertices[m_indices[triangle_nr * 3]].Position;
-  objl::Vector3 v1_objl = m_vertices[m_indices[triangle_nr * 3 + 1]].Position;
-  objl::Vector3 v2_objl = m_vertices[m_indices[triangle_nr * 3 + 2]].Position;
-
-  Vec3f v0 = Vector3ToVec3f(v0_objl);
-  Vec3f v1 = Vector3ToVec3f(v1_objl);
-  Vec3f v2 = Vector3ToVec3f(v2_objl);
+  cannoli::Vec3f v0 = m_vertices[m_indices[triangle_nr * 3]];
+  cannoli::Vec3f v1 = m_vertices[m_indices[triangle_nr * 3 + 1]];
+  cannoli::Vec3f v2 = m_vertices[m_indices[triangle_nr * 3 + 2]];
 
   // Transform the coordinates of the vertices to the CS of the ray
   // 1) Translate vertices based on the ray origin
@@ -31,24 +29,14 @@ bool cannoli::Mesh::RayTriangleIntersect(const cannoli::LightRay &ray,
   cannoli::PointXYZ v1t = v1 - ray.GetOrigin();
   cannoli::PointXYZ v2t = v2 - ray.GetOrigin();
 
-  // TODO: Store kx, ky, kz and s_x, s_y, s_z inside the LightRay class (these values are indevendent of the triangle
-  //  vertices and don't really need to be comvuted for each intersection test
-
-  // 2) Permute the comvonents such that the z-dimension is the one where the absolute value of the ray's direction
+  // 2) Permute the components such that the z-dimension is the one where the absolute value of the ray's direction
   // is largest
-  int kz = cannoli::MaxDimension(cannoli::Abs(ray.GetDirection()));
-  int kx = kz + 1;
-  if (kx == 3) {
-	kx = 0;
-  }
-  int ky = kx + 1;
-  if (ky == 3) {
-	ky = 0;
-  }
-  cannoli::Vec3f ray_dir_permuted = cannoli::Permute(ray.GetDirection(), kx, ky, kz);
-  v0t = Permute(v0t, kx, ky, kz);
-  v1t = Permute(v1t, kx, ky, kz);
-  v2t = Permute(v2t, kx, ky, kz);
+  cannoli::Vec3f ray_dir_permuted =	ray.PermuteDirection();
+  std::array<int, 3> k_vals = ray.GetKVals();
+
+  v0t = Permute(v0t, k_vals.at(0), k_vals.at(1), k_vals.at(2));
+  v1t = Permute(v1t, k_vals.at(0), k_vals.at(1), k_vals.at(2));
+  v2t = Permute(v2t, k_vals.at(0), k_vals.at(1), k_vals.at(2));
 
   // 3) Shear transformation to align the ray direction with the +z axis (for now only for x and y coordinates)
   float ray_dir_permuted_z = ray_dir_permuted.GetZ();
@@ -112,48 +100,6 @@ bool cannoli::Mesh::RayTriangleIntersect(const cannoli::LightRay &ray,
   hit_record.surface_normal = normal;
 
   return true;
-
-#endif
-
-#ifdef SIMPLE_INTERSECTION
-
-  // Triangle intersection code from https://iquilezles.org/articles/intersectors/
-
-  // Get vertices
-  objl::Vector3 v0_objl = m_vertices[m_indices[triangle_nr * 3]].Position;
-  objl::Vector3 v1_objl = m_vertices[m_indices[triangle_nr * 3 + 1]].Position;
-  objl::Vector3 v2_objl = m_vertices[m_indices[triangle_nr * 3 + 2]].Position;
-
-  // Convert Vector3 to Vec3f
-  // FIXME: Don't do this conversion for every hit call, but rather just once at loading the mesh
-  Vec3f v0 = Vector3ToVec3f(v0_objl);
-  Vec3f v1 = Vector3ToVec3f(v1_objl);
-  Vec3f v2 = Vector3ToVec3f(v2_objl);
-
-  // Define sides
-  Vec3f v1_v0 = v1 - v0;
-  Vec3f v2_v0 = v2 - v0;
-  Vec3f rayOrigin_v0 = ray.GetOrigin() - v0;
-  Vec3f normal = cross(v1_v0, v2_v0);
-  Vec3f q = cross(rayOrigin_v0, ray.GetDirection());
-  float d = 1.0 / dot(ray.GetDirection(), normal);
-  float u = d * dot(-q, v2_v0);
-  float v = d * dot(q, v1_v0);
-  float t = d * dot(-normal, rayOrigin_v0);
-
-  if (u < 0.0 || v < 0.0 || (u + v) > 1.0) {
-	t = -1.0;
-	return false;
-  }
-
-  hit_record.t = t;
-  hit_record.u = u;
-  hit_record.v = v;
-  hit_record.hit_point = ray.Position(t);
-
-  return true;
-
-#endif
 }
 
 cannoli::LightRay cannoli::Mesh::ComputeSurfaceInteraction(const cannoli::LightRay &ray, const cannoli::HitRecord
