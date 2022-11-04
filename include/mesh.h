@@ -7,6 +7,8 @@
 #include "hit_record.h"
 #include "vec3f.h"
 #include "material.h"
+#include "object.h"
+#include "aabb.h"
 
 #include <string>
 #include <memory>
@@ -36,7 +38,7 @@ class Mesh {
 							const float &t_min,
 							const float &t_max,
 							HitRecord &hit_record,
-							int &triangle_nr);
+							int triangle_nr);
 
   LightRay ComputeSurfaceInteraction(const LightRay &ray, const HitRecord &hit_record);
 
@@ -48,6 +50,7 @@ class Mesh {
 
  private:
   int m_faceCount = 0;
+  AABB m_bbox;
 
 };
 } // namespace cannoli

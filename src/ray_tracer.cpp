@@ -40,8 +40,9 @@ cannoli::ColorRGB cannoli::RayTracer::ComputeColor(cannoli::LightRay &ray,
 	return ColorRGB(0, 0, 0);
   }
 
-  for (auto &mesh : meshes_in_scene) {
-	for (int i = 0; i < mesh->GetFaceCount(); ++i) {
+  for (const auto &mesh : meshes_in_scene) {
+	int nr_of_triangles = mesh->GetFaceCount();
+	for (int i = 0; i < nr_of_triangles; ++i) {
 	  if (mesh->RayTriangleIntersect(ray, eps, closest_so_far, temp_hit_record, i)) {
 		closest_so_far = temp_hit_record.t;
 		hit_record = temp_hit_record;

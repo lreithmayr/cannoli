@@ -1,22 +1,22 @@
 #include "mesh.h"
 
-cannoli::Mesh::Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material) {
-	m_name = mesh.MeshName;
+cannoli::Mesh::Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material) :
+  m_indices(mesh.Indices), m_name(mesh.MeshName), m_meshMaterial(material), m_faceCount(m_indices.size() / 3) {
+  // Convert the vertex positions from objl's Vector3 format to Vec3f
+  for (const auto &objl_vertex : mesh.Vertices) {
+	m_vertices.push_back(cannoli::Vector3ToVec3f(objl_vertex.Position));
+  }
 
-	// Convert the vertex positions from objl's Vector3 format to Vec3f
-	for (const auto &v: mesh.Vertices) {
-		m_vertices.push_back(cannoli::Vector3ToVec3f(v.Position));
-	};
-	m_indices = mesh.Indices;
-	m_meshMaterial = material;
-	m_faceCount = m_indices.size() / 3;
+  for (const auto &vert : m_vertices) {
+
+  }
 }
 
 bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
 										 const float &t_min,
 										 const float &t_max,
 										 cannoli::HitRecord &hit_record,
-										 int &triangle_nr) {
+										 int triangle_nr) {
 
   // Get triangle vertices from mesh
   cannoli::Vec3f v0 = m_vertices[m_indices[triangle_nr * 3]];
@@ -31,7 +31,7 @@ bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
 
   // 2) Permute the components such that the z-dimension is the one where the absolute value of the ray's direction
   // is largest
-  cannoli::Vec3f ray_dir_permuted =	ray.PermuteDirection();
+  cannoli::Vec3f ray_dir_permuted = ray.PermuteDirection();
   std::array<int, 3> k_vals = ray.GetKVals();
 
   v0t = Permute(v0t, k_vals.at(0), k_vals.at(1), k_vals.at(2));
@@ -78,8 +78,8 @@ bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
 
   float t_scaled = e0 * v0t_sz + e1 * v1t_sz + e2 * v2t_sz;
 
-  if ((det < 0 && (t_scaled >= 0 || t_scaled < t_max * det)) || (det > 0 && (t_scaled <= 0 || t_scaled > t_max *
-  det))) {
+  if ((det < 0 && (t_scaled >= 0 || t_scaled < t_max * det))
+	|| (det > 0 && (t_scaled <= 0 || t_scaled > t_max * det))) {
 	return false;
   }
 
@@ -102,7 +102,7 @@ bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
   return true;
 }
 
-cannoli::LightRay cannoli::Mesh::ComputeSurfaceInteraction(const cannoli::LightRay &ray, const cannoli::HitRecord
-&hit_record) {
-	return m_meshMaterial->Scatter(ray, hit_record.hit_point, hit_record.surface_normal);
+cannoli::LightRay cannoli::Mesh::ComputeSurfaceInteraction(const cannoli::LightRay &ray,
+														   const cannoli::HitRecord &hit_record) {
+  return m_meshMaterial->Scatter(ray, hit_record.hit_point, hit_record.surface_normal);
 }
