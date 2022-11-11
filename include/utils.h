@@ -11,8 +11,6 @@
 
 namespace cannoli {
 
-// I/O and Logging
-
 void ProgressBar(auto progress) {
   int barWidth = 70;
 
@@ -29,16 +27,6 @@ void ProgressBar(auto progress) {
   }
   std::cout << "] " << static_cast<int>(progress * 100.0) << " %\r";
   std::cout.flush();
-}
-
-template<typename T>
-void LOG(T msg) {
-  fmt::print(msg);
-}
-
-template<typename T>
-void ERROR(T msg) {
-  fmt::print(stderr, msg);
 }
 
 // Constants

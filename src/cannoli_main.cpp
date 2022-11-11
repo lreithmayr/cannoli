@@ -25,9 +25,9 @@ cannoli::Scene LoadScene(std::string &fpath) {
   objl::Loader loader;
   bool loadout = loader.LoadFile(fpath);
   if (loadout) {
-	cannoli::LOG("Mesh loaded successfully.");
+	fmt::print("Mesh loaded successfully.\n");
   } else {
-	cannoli::ERROR("Failed to load mesh!");
+	fmt::print(stderr, "Failed to load mesh!\n");
   }
 
   for (auto &msh : loader.LoadedMeshes) {
