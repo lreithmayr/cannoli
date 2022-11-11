@@ -48,7 +48,7 @@ cannoli::Scene LoadScene(std::string &fpath) {
 }
 
 int main() {
-  // std::string obj_path = "../scenes/cube.obj";
+  // std::string obj_fpath = "../scenes/cube.obj";
   std::string obj_fpath = "../scenes/simple_scene.obj";
   std::string out_path = "../images/triIndex_output.ppm";
 

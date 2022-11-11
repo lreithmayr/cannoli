@@ -22,8 +22,13 @@ class AABB {
 	m_pMax(std::max(p1.GetX(), p2.GetX()), std::max(p1.GetY(), p2.GetY()), std::max(p1.GetZ(), p2.GetZ())) {};
 
   bool AABBIntersection(const LightRay &ray, float t_min, float t_max);
+
+  bool IsInside(PointXYZ &p);
+
+  void Expand(Vec3f &p1_new);
+
  private:
-  PointXYZ m_pMin{}, m_pMax{};
+  PointXYZ m_pMin, m_pMax;
 };
 } // namespace cannoli
 #endif //CANNOLI_SRC_BOUNDING_BOX_H_
