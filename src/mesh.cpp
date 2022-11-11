@@ -11,8 +11,10 @@ cannoli::Mesh::Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material) :
 	m_vertices.push_back(cannoli::Vector3ToVec3f(objl_vertex.Position));
   }
 
+
   // Compute the mesh's axis-alignes bounding box (AABB)
   ComputeAABB();
+  fmt::print("Constructed Mesh {}, pMin: {}, pMax: {} \n", m_name, m_aabb.GetPMin(), m_aabb.GetPMax());
 }
 
 bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
@@ -112,9 +114,8 @@ cannoli::LightRay cannoli::Mesh::ComputeSurfaceInteraction(const cannoli::LightR
 
 void cannoli::Mesh::ComputeAABB() {
   for (auto &pt : m_vertices) {
-	if (!m_bbox.IsInside(pt)) {
-	  cannoli::LOG(m_bbox.GetPMin());
-	  m_bbox = m_bbox.Expand(pt);
+	if (!m_aabb.IsInside(pt)) {
+	  m_aabb = m_aabb.Expand(pt);
 	}
   }
 }

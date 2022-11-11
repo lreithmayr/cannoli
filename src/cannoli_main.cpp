@@ -12,7 +12,7 @@ constexpr float FOCAL_LENGTH = 1.0;
 constexpr float VFOV = 60.0;
 
 // Canvas parameters
-constexpr int CANVAS_WIDTH = 800;
+constexpr int CANVAS_WIDTH = 1200;
 
 // Ray tracer parameters
 constexpr int SAMPLES = 32;

@@ -1,6 +1,7 @@
 #ifndef CANNOLI_INCLUDE_UTILS_H_
 #define CANNOLI_INCLUDE_UTILS_H_
 
+#include <fmt/format.h>
 #include <cmath>
 #include <limits>
 #include <random>
@@ -32,12 +33,12 @@ void ProgressBar(auto progress) {
 
 template<typename T>
 void LOG(T msg) {
-  std::cout << msg << "\n";
+  fmt::print(msg);
 }
 
 template<typename T>
 void ERROR(T msg) {
-  std::cerr << msg << "\n";
+  fmt::print(stderr, msg);
 }
 
 // Constants

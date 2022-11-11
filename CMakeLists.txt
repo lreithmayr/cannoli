@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.23)
 project(cannoli)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -fconcepts -pthread -DAABB_INT")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -fconcepts -pthread  -DAABB_INT")
+
 # === PROJECT SETUP ===
 
 include_directories(
@@ -49,15 +50,8 @@ FetchContent_Declare(
         URL https://github.com/google/googletest/archive/5376968f6948923e2411081fd9372e71a59d8e77.zip
 )
 FetchContent_MakeAvailable(googletest)
-
-#list(APPEND CMAKE_INCLUDE_PATH "/usr/local/include")
-FIND_PACKAGE(
-Eigen3 3.4 REQUIRED NO_MODULE
-)
-
-FIND_PACKAGE(
-        Threads REQUIRED
-)
+FIND_PACKAGE(Threads REQUIRED)
+FIND_PACKAGE(fmt)
 
 # === TEST ===
 add_executable(vec3_test ${PROJECT_SOURCE_DIR}/test/vec3f_test.cpp)
@@ -67,5 +61,5 @@ add_test(NAME Vec3Test COMMAND vec3test)
 # === RUN ===
 add_executable(cannoli_main ${PROJECT_SOURCE_DIR}/src/cannoli_main.cpp)
 target_link_libraries(
-        cannoli_main ${PROJECT_NAME} Eigen3::Eigen
+        cannoli_main ${PROJECT_NAME} fmt::fmt
 )

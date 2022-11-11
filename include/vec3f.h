@@ -177,5 +177,34 @@ inline Vec3f Abs(const Vec3f &vec) {
   return {objl_vector3.X, objl_vector3.Y, objl_vector3.Z};
 }
 
+
 }  // namespace cannoli
+
+// fmt formatter for Vec3f type
+template <> struct fmt::formatter<cannoli::Vec3f> {
+  // Presentation format: 'f' - fixed, 'e' - exponential.
+  char presentation = 'f';
+
+  // Parses format specifications of the form ['f' | 'e'].
+  constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {
+	auto it = ctx.begin(), end = ctx.end();
+	if (it != end && (*it == 'f' || *it == 'e')) presentation = *it++;
+
+	// Check if reached the end of the range:
+	if (it != end && *it != '}') throw format_error("invalid format");
+
+	// Return an iterator past the end of the parsed range:
+	return it;
+  }
+
+  // Formats the point p using the parsed format specification (presentation)
+  // stored in this formatter.
+  template <typename FormatContext>
+  auto format(const cannoli::Vec3f& v, FormatContext& ctx) const -> decltype(ctx.out()) {
+	// ctx.out() is an output iterator to write to.
+	return presentation == 'f'
+		   ? fmt::format_to(ctx.out(), "(x = {:.1f}, y = {:.1f}, z = {:.1f})", v.GetX(), v.GetY(), v.GetZ())
+		   : fmt::format_to(ctx.out(), "(x = {:.1e}, y = {:.1e}, z = {:.1f})", v.GetX(), v.GetY(), v.GetZ());
+  }
+};
 #endif //CANNOLI_INCLUDE_VEC3F_H_

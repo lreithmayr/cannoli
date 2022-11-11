@@ -47,42 +47,40 @@ cannoli::ColorRGB cannoli::RayTracer::ComputeColor(cannoli::LightRay &ray,
 #if AABB_INT
 	if (mesh->GetAABB()->AABBIntersection(ray, eps, closest_so_far)) {
 	  bbhit = true;
-	  // for (int i = 0; i < nr_of_triangles; ++i) {
-	// 	if (mesh->RayTriangleIntersect(ray, eps, closest_so_far, temp_hit_record, i)) {
-	// 	  closest_so_far = temp_hit_record.t;
-	// 	  hit_record = temp_hit_record;
-	// 	  closest_mesh = mesh;
-	// 	  hit_triangle = true;
-	// 	}
-	  // }
-	}
-  }
-
-  if(bbhit) {
-	return ColorRGB(1, 0, 0);
-}
-
-#else
-
-	for (int i = 0; i < nr_of_triangles; ++i) {
-	  if (mesh->RayTriangleIntersect(ray, eps, closest_so_far, temp_hit_record, i)) {
-		closest_so_far = temp_hit_record.t;
-		hit_record = temp_hit_record;
-		closest_mesh = mesh;
-		hit_triangle = true;
+	  for (int i = 0; i < nr_of_triangles; ++i) {
+		if (mesh->RayTriangleIntersect(ray, eps, closest_so_far, temp_hit_record, i)) {
+		  closest_so_far = temp_hit_record.t;
+		  hit_record = temp_hit_record;
+		  closest_mesh = mesh;
+		  hit_triangle = true;
+		}
 	  }
 	}
   }
 
+//  if (bbhit)
+//	return ColorRGB(0.5, 0, 0);
+#else
+  for (int i = 0; i < nr_of_triangles; ++i) {
+	if (mesh->RayTriangleIntersect(ray, eps, closest_so_far, temp_hit_record, i)) {
+	  closest_so_far = temp_hit_record.t;
+	  hit_record = temp_hit_record;
+	  closest_mesh = mesh;
+	  hit_triangle = true;
+	}
+  }
+  }
 #endif
 
   if (hit_triangle) {
 	LightRay scattered_ray = closest_mesh->ComputeSurfaceInteraction(ray, hit_record);
 	ColorRGB albedo = closest_mesh->GetMaterial()->GetAlbedo();
-	return albedo * ComputeColor(scattered_ray, n_bounces - 1, hit_record, closest_so_far, meshes_in_scene);
+	return
+	  albedo * ComputeColor(scattered_ray, n_bounces - 1, hit_record, closest_so_far, meshes_in_scene);
   }
 
-  return PaintBackground(ray);
+  return
+	PaintBackground(ray);
 }
 
 void cannoli::RayTracer::WritePPMImage(std::ofstream &stream, int samples) {

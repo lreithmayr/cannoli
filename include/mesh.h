@@ -35,7 +35,7 @@ class Mesh {
   }
 
   [[nodiscard]] std::shared_ptr<AABB> GetAABB() const {
-	return std::make_shared<AABB>(m_bbox);
+	return std::make_shared<AABB>(m_aabb);
   }
 
   bool RayTriangleIntersect(LightRay &ray,
@@ -55,7 +55,7 @@ class Mesh {
 
  private:
   int m_faceCount = 0;
-  AABB m_bbox;
+  AABB m_aabb;
 
 };
 } // namespace cannoli

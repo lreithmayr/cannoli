@@ -10,3 +10,7 @@ spirit, but the architecture is going to be substantially different, in order to
 the line.
 
 Heavy inspiration is drawn from [Manta Ray](https://github.com/ange-yaghi/manta-ray) by Anghe Yaghi.
+
+### Dependencies
+
+- [fmt](https://github.com/fmtlib/fmt)
