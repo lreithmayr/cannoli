@@ -35,6 +35,7 @@ cannoli::ColorRGB cannoli::RayTracer::ComputeColor(cannoli::LightRay &ray,
   float eps = 0.001;
   std::shared_ptr<Mesh> closest_mesh = nullptr;
   bool hit_triangle = false;
+  bool bbhit = false;
 
   if (n_bounces <= 0) {
 	return ColorRGB(0, 0, 0);
@@ -43,18 +44,23 @@ cannoli::ColorRGB cannoli::RayTracer::ComputeColor(cannoli::LightRay &ray,
   for (const auto &mesh : meshes_in_scene) {
 	int nr_of_triangles = mesh->GetFaceCount();
 
-#if AABB
+#if AABB_INT
 	if (mesh->GetAABB()->AABBIntersection(ray, eps, closest_so_far)) {
-	  for (int i = 0; i < nr_of_triangles; ++i) {
-		if (mesh->RayTriangleIntersect(ray, eps, closest_so_far, temp_hit_record, i)) {
-		  closest_so_far = temp_hit_record.t;
-		  hit_record = temp_hit_record;
-		  closest_mesh = mesh;
-		  hit_triangle = true;
-		}
-	  }
+	  bbhit = true;
+	  // for (int i = 0; i < nr_of_triangles; ++i) {
+	// 	if (mesh->RayTriangleIntersect(ray, eps, closest_so_far, temp_hit_record, i)) {
+	// 	  closest_so_far = temp_hit_record.t;
+	// 	  hit_record = temp_hit_record;
+	// 	  closest_mesh = mesh;
+	// 	  hit_triangle = true;
+	// 	}
+	  // }
 	}
   }
+
+  if(bbhit) {
+	return ColorRGB(1, 0, 0);
+}
 
 #else
 
@@ -76,9 +82,7 @@ cannoli::ColorRGB cannoli::RayTracer::ComputeColor(cannoli::LightRay &ray,
 	return albedo * ComputeColor(scattered_ray, n_bounces - 1, hit_record, closest_so_far, meshes_in_scene);
   }
 
-  cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
-  float t = 0.5 * (unit_direction.GetY() + 1.0);
-  return (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
+  return PaintBackground(ray);
 }
 
 void cannoli::RayTracer::WritePPMImage(std::ofstream &stream, int samples) {
@@ -115,5 +119,11 @@ cannoli::Vec3f cannoli::RayTracer::GenerateDirection(const int pixel_x, const in
   Vec3f
 	dir = m_camera.GetViewportLLC() + m_camera.GetHorizontal() * u + m_camera.GetVertical() * v - m_camera.GetOrigin();
   return dir;
+}
+
+cannoli::ColorRGB cannoli::RayTracer::PaintBackground(cannoli::LightRay &ray) {
+  cannoli::Vec3f unit_direction = ray.GetDirection().normalize();
+  float t = 0.5 * (unit_direction.GetY() + 1.0);
+  return (1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0);
 }
 

@@ -21,11 +21,19 @@ class AABB {
 	m_pMin(std::min(p1.GetX(), p2.GetX()), std::min(p1.GetY(), p2.GetY()), std::min(p1.GetZ(), p2.GetZ())),
 	m_pMax(std::max(p1.GetX(), p2.GetX()), std::max(p1.GetY(), p2.GetY()), std::max(p1.GetZ(), p2.GetZ())) {};
 
+  PointXYZ GetPMin() {
+	return m_pMin;
+  }
+
+  PointXYZ GetPMax() {
+	return m_pMax;
+  }
+
   bool AABBIntersection(const LightRay &ray, float t_min, float t_max);
 
-  bool IsInside(PointXYZ &p);
+  bool IsInside(PointXYZ &pt);
 
-  void Expand(Vec3f &p1_new);
+  cannoli::AABB Expand(Vec3f &pt);
 
  private:
   PointXYZ m_pMin, m_pMax;

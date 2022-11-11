@@ -41,6 +41,7 @@ class RayTracer {
   void ResetPixel();
   Vec3f GenerateDirection(int pixel_x, int pixel_y);
   static LightRay EmitRay(const Vec3f &origin, const Vec3f &direction);
+  static ColorRGB PaintBackground(LightRay &ray);
 
  private:
   std::ofstream m_ppmImage{};

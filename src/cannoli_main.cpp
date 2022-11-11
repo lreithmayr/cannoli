@@ -50,7 +50,11 @@ cannoli::Scene LoadScene(std::string &fpath) {
 int main() {
   // std::string obj_fpath = "../scenes/cube.obj";
   std::string obj_fpath = "../scenes/simple_scene.obj";
+#if AABB_INT
+  std::string out_path = "../images/triIndex_output_bbox.ppm";
+#else
   std::string out_path = "../images/triIndex_output.ppm";
+#endif
 
   // Create a camera and a canvas on which to render the scene
   cannoli::Camera camera(ASPECT_RATIO,

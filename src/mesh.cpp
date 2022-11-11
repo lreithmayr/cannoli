@@ -5,6 +5,7 @@ cannoli::Mesh::Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material) :
   m_name(mesh.MeshName),
   m_meshMaterial(material),
   m_faceCount(m_indices.size() / 3) {
+
   // Convert the vertex positions from objl's Vector3 format to Vec3f
   for (const auto &objl_vertex : mesh.Vertices) {
 	m_vertices.push_back(cannoli::Vector3ToVec3f(objl_vertex.Position));
@@ -110,9 +111,10 @@ cannoli::LightRay cannoli::Mesh::ComputeSurfaceInteraction(const cannoli::LightR
 }
 
 void cannoli::Mesh::ComputeAABB() {
-  for (auto &pt: m_vertices) {
+  for (auto &pt : m_vertices) {
 	if (!m_bbox.IsInside(pt)) {
-	  m_bbox.Expand(pt);
+	  cannoli::LOG(m_bbox.GetPMin());
+	  m_bbox = m_bbox.Expand(pt);
 	}
   }
 }

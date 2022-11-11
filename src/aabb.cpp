@@ -17,20 +17,17 @@ bool cannoli::AABB::AABBIntersection(const LightRay &ray, float t_min, float t_m
   return true;
 }
 
-bool cannoli::AABB::IsInside(cannoli::PointXYZ &p) {
-  return (p.GetX() >= m_pMin.GetX() && p.GetX() <= m_pMax.GetX() &&
-	p.GetY() >= m_pMin.GetY() && p.GetY() <= m_pMax.GetY() &&
-	p.GetZ() >= m_pMin.GetZ() && p.GetZ() <= m_pMax.GetZ());
+bool cannoli::AABB::IsInside(cannoli::PointXYZ &pt) {
+  return (pt.GetX() >= m_pMin.GetX() && pt.GetX() <= m_pMax.GetX() &&
+	pt.GetY() >= m_pMin.GetY() && pt.GetY() <= m_pMax.GetY() &&
+	pt.GetZ() >= m_pMin.GetZ() && pt.GetZ() <= m_pMax.GetZ());
 }
 
-void cannoli::AABB::Expand(cannoli::Vec3f &pt_new) {
-  if (pt_new.GetX() <= m_pMin.GetX() && pt_new.GetY() <= m_pMin.GetY() &&
-	pt_new.GetZ() <= m_pMin.GetZ()) {
-	m_pMin = pt_new;
-  }
-
-  if (pt_new.GetX() >= m_pMax.GetX() && pt_new.GetY() >= m_pMax.GetY() &&
-	pt_new.GetZ() >= m_pMax.GetZ()) {
-	m_pMax = pt_new;
-  }
+cannoli::AABB cannoli::AABB::Expand(cannoli::Vec3f &pt) {
+  return AABB(PointXYZ(std::min(m_pMin.GetX(), pt.GetX()),
+					   std::min(m_pMin.GetY(), pt.GetY()),
+					   std::min(m_pMin.GetZ(), pt.GetZ())),
+			  PointXYZ(std::max(m_pMax.GetX(), pt.GetX()),
+					   std::max(m_pMax.GetY(), pt.GetY()),
+					   std::max(m_pMax.GetZ(), pt.GetZ())));
 }
