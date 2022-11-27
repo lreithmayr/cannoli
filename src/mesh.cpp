@@ -14,7 +14,7 @@ cannoli::Mesh::Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material) :
 
   // Compute the mesh's axis-alignes bounding box (AABB)
   ComputeAABB();
-  fmt::print("Constructed Mesh {}, pMin: {}, pMax: {} \n", m_name, m_aabb.GetPMin(), m_aabb.GetPMax());
+  fmt::print("Constructed Mesh {} \n Number of Vertices: {} \n Number of Faces: {} \n", m_name, m_vertices.size(), m_faceCount);
 }
 
 bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,

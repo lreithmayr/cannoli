@@ -30,7 +30,7 @@ class RayTracer {
 
   void Trace();
 
-  cannoli::ColorRGB ComputeColor(LightRay &ray,
+  cannoli::ColorRGB ComputeColor(cannoli::LightRay &ray,
 								 int n_bounces,
 								 HitRecord &hit_record,
 								 float t_max,
@@ -41,7 +41,7 @@ class RayTracer {
   void ResetPixel();
   Vec3f GenerateDirection(int pixel_x, int pixel_y);
   static LightRay EmitRay(const Vec3f &origin, const Vec3f &direction);
-  static ColorRGB PaintBackground(LightRay &ray);
+  static cannoli::ColorRGB PaintBackground(cannoli::LightRay &ray);
 
  private:
   std::ofstream m_ppmImage{};
@@ -53,6 +53,8 @@ class RayTracer {
   std::string m_outFile;
   int m_samples;
   int m_maxBounces;
+
+  bool m_hitBackground{false};
 };
 }  // namespace cannoli
 
