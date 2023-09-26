@@ -22,7 +22,7 @@ class Mesh {
 	return m_vertices;
   }
 
-  [[nodiscard]] std::vector<uint> GetIndices() const {
+  [[nodiscard]] std::vector<unsigned int> GetIndices() const {
 	return m_indices;
   }
 
@@ -49,7 +49,7 @@ class Mesh {
 
  private:
   std::vector<cannoli::Vec3f> m_vertices;
-  std::vector<uint> m_indices;
+  std::vector<unsigned int> m_indices;
   std::string m_name;
   std::shared_ptr<Material> m_meshMaterial;
 

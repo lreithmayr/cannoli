@@ -3,13 +3,15 @@ cmake_minimum_required(VERSION 3.23)
 project(cannoli)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -fconcepts -pthread  -DAABB_INT")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -fconcepts -pthread -DAABB_INT")
 
 # === PROJECT SETUP ===
+add_definitions( "-DFMT_HEADER_ONLY=1" )
 
 include_directories(
         ${PROJECT_SOURCE_DIR}/include
         ${EIGEN3_INCLUDE_DIR}
+        ${PROJECT_SOURCE_DIR}/fmt
 )
 
 add_library(${PROJECT_NAME} SHARED
@@ -51,7 +53,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 FIND_PACKAGE(Threads REQUIRED)
-FIND_PACKAGE(fmt)
+# ADD_SUBDIRECTORY(fmt)
 
 # === TEST ===
 add_executable(vec3_test ${PROJECT_SOURCE_DIR}/test/vec3f_test.cpp)
@@ -61,5 +63,5 @@ add_test(NAME Vec3Test COMMAND vec3test)
 # === RUN ===
 add_executable(cannoli_main ${PROJECT_SOURCE_DIR}/src/cannoli_main.cpp)
 target_link_libraries(
-        cannoli_main ${PROJECT_NAME} fmt::fmt
+        cannoli_main ${PROJECT_NAME}
 )

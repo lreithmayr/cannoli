@@ -1,7 +1,7 @@
 #ifndef CANNOLI_INCLUDE_UTILS_H_
 #define CANNOLI_INCLUDE_UTILS_H_
 
-#include <fmt/format.h>
+#include <include/fmt/format.h>
 #include <cmath>
 #include <limits>
 #include <random>

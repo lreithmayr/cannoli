@@ -13,7 +13,9 @@
 #include "mesh.h"
 
 #include <string>
+#include <cstring>
 #include <utility>
+#include <fstream>
 
 namespace cannoli {
 class RayTracer {
