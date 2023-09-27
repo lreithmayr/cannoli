@@ -37,10 +37,15 @@ cannoli::Scene LoadScene(std::string &fpath) {
   return scene;
 }
 
+std::string GetFilename(std::string &path) {
+  std::string fn = path.substr(path.rfind('/') + 1, path.size() - path.rfind('.') + 1);
+  return fn;
+}
+
 // Camera parameters
 constexpr float ASPECT_RATIO = 3.0 / 2.0;
-constexpr float FOCAL_LENGTH = 1.0;
-constexpr float VFOV = 30.0;
+constexpr float FOCAL_LENGTH = 2.0;
+constexpr float VFOV = 10.0;
 
 // Canvas parameters
 constexpr int CANVAS_WIDTH = 800;
@@ -50,10 +55,11 @@ constexpr int SAMPLES = 100;
 constexpr int MAX_BOUNCES = 8;
 
 int main() {
-  std::string obj_fpath = "../models/blocks.obj";
+  std::string obj_fpath = "../models/lamp2.obj";
+  std::string fname = GetFilename(obj_fpath);
 
 #if AABB_INT
-  std::string out_path = fmt::format("../images/cannoli_output_samples-{}_maxBounces-{}.ppm", SAMPLES, MAX_BOUNCES);
+  std::string out_path = fmt::format("../images/{}_samples-{}_maxBounces-{}.ppm", fname, SAMPLES, MAX_BOUNCES);
 #else
   std::string out_path = "../images/triIndex_output.ppm";
 #endif
@@ -62,7 +68,7 @@ int main() {
   cannoli::Camera camera(ASPECT_RATIO,
                          FOCAL_LENGTH,
                          VFOV,
-                         cannoli::PointXYZ(20, 10, 10),
+                         cannoli::PointXYZ(20, 10, 30),
                          cannoli::PointXYZ(0, 3, 0),
                          cannoli::Vec3f(0, 1, 0));
 
