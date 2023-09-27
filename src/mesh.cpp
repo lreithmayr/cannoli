@@ -1,27 +1,30 @@
 #include "mesh.h"
 
 cannoli::Mesh::Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material) :
-  m_indices(mesh.Indices),
-  m_name(mesh.MeshName),
-  m_meshMaterial(material),
-  m_faceCount(m_indices.size() / 3) {
+    m_indices(mesh.Indices),
+    m_name(mesh.MeshName),
+    m_meshMaterial(material),
+    m_faceCount(m_indices.size() / 3) {
 
   // Convert the vertex positions from objl's Vector3 format to Vec3f
   for (const auto &objl_vertex : mesh.Vertices) {
-	m_vertices.push_back(cannoli::Vector3ToVec3f(objl_vertex.Position));
+    m_vertices.push_back(cannoli::Vector3ToVec3f(objl_vertex.Position));
   }
 
 
   // Compute the mesh's axis-alignes bounding box (AABB)
   ComputeAABB();
-  fmt::print("Constructed Mesh {} \n Number of Vertices: {} \n Number of Faces: {} \n", m_name, m_vertices.size(), m_faceCount);
+  fmt::print("Constructed Mesh {} \n Number of Vertices: {} \n Number of Faces: {} \n",
+             m_name,
+             m_vertices.size(),
+             m_faceCount);
 }
 
 bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
-										 const float &t_min,
-										 const float &t_max,
-										 cannoli::HitRecord &hit_record,
-										 int triangle_nr) {
+                                         const float &t_min,
+                                         const float &t_max,
+                                         cannoli::HitRecord &hit_record,
+                                         int triangle_nr) {
 
   // Get triangle vertices from mesh
   cannoli::Vec3f v0 = m_vertices[m_indices[triangle_nr * 3]];
@@ -69,12 +72,12 @@ bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
   float e2 = v0t_x * v1t_y - v0t_y * v1t_x;
 
   if ((e0 < 0 || e1 < 0 || e2 < 0) && (e0 > 0 || e1 > 0 || e2 > 0)) {
-	return false;
+    return false;
   }
 
   float det = e0 + e1 + e2;
   if (det == 0.f) {
-	return false;
+    return false;
   }
 
   float v0t_sz = v0t.GetZ() * s_z;
@@ -84,8 +87,8 @@ bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
   float t_scaled = e0 * v0t_sz + e1 * v1t_sz + e2 * v2t_sz;
 
   if ((det < 0 && (t_scaled >= 0 || t_scaled < t_max * det))
-	|| (det > 0 && (t_scaled <= 0 || t_scaled > t_max * det))) {
-	return false;
+      || (det > 0 && (t_scaled <= 0 || t_scaled > t_max * det))) {
+    return false;
   }
 
   float invDet = 1 / det;
@@ -108,14 +111,14 @@ bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
 }
 
 cannoli::LightRay cannoli::Mesh::ComputeSurfaceInteraction(const cannoli::LightRay &ray,
-														   const cannoli::HitRecord &hit_record) {
+                                                           const cannoli::HitRecord &hit_record) {
   return m_meshMaterial->Scatter(ray, hit_record.hit_point, hit_record.surface_normal);
 }
 
 void cannoli::Mesh::ComputeAABB() {
   for (auto &pt : m_vertices) {
-	if (!m_aabb.IsInside(pt)) {
-	  m_aabb = m_aabb.Expand(pt);
-	}
+    if (!m_aabb.IsInside(pt)) {
+      m_aabb = m_aabb.Expand(pt);
+    }
   }
 }

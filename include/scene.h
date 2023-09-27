@@ -12,11 +12,11 @@ class Scene {
   Scene() = default;
 
   void Add(const std::shared_ptr<Mesh> &mesh) {
-	m_meshesInScene.emplace_back(mesh);
+    m_meshesInScene.emplace_back(mesh);
   }
 
   [[nodiscard]] std::vector<std::shared_ptr<Mesh>> GetMeshesInScene() const {
-	return m_meshesInScene;
+    return m_meshesInScene;
   };
 
  private:

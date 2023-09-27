@@ -13,7 +13,7 @@ class LambertianBRDF : public Material {
   ~LambertianBRDF() override = default;
 
   [[nodiscard]] ColorRGB GetAlbedo() const override {
-	return m_lambertianAlbedo;
+    return m_lambertianAlbedo;
   }
 
   LightRay Scatter(const LightRay &ray_in, const PointXYZ &hit_point, const Vec3f &surf_normal) override;

@@ -19,30 +19,30 @@ class Mesh {
   explicit Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material);
 
   [[nodiscard]] std::vector<Vec3f> GetVertices() const {
-	return m_vertices;
+    return m_vertices;
   }
 
   [[nodiscard]] std::vector<unsigned int> GetIndices() const {
-	return m_indices;
+    return m_indices;
   }
 
   [[nodiscard]] int GetFaceCount() const {
-	return m_faceCount;
+    return m_faceCount;
   }
 
   [[nodiscard]] std::shared_ptr<Material> GetMaterial() const {
-	return m_meshMaterial;
+    return m_meshMaterial;
   }
 
   [[nodiscard]] std::shared_ptr<AABB> GetAABB() const {
-	return std::make_shared<AABB>(m_aabb);
+    return std::make_shared<AABB>(m_aabb);
   }
 
   bool RayTriangleIntersect(LightRay &ray,
-							const float &t_min,
-							const float &t_max,
-							HitRecord &hit_record,
-							int triangle_nr);
+                            const float &t_min,
+                            const float &t_max,
+                            HitRecord &hit_record,
+                            int triangle_nr);
 
   LightRay ComputeSurfaceInteraction(const LightRay &ray, const HitRecord &hit_record);
   void ComputeAABB();

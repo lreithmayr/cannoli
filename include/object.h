@@ -18,23 +18,23 @@ class Object {
   virtual ~Object() = default;
 
   void SetType(ObjectType type) {
-	m_type = type;
+    m_type = type;
   }
 
   [[nodiscard]] ObjectType GetType() const {
-	return m_type;
+    return m_type;
   }
 
   [[nodiscard]] std::shared_ptr<Material> GetMaterial() {
-	return m_material;
+    return m_material;
   }
 
   [[nodiscard]] ColorRGB GetBaseColor() {
-	return m_baseColor;
+    return m_baseColor;
   }
 
   void SetBaseColor(const ColorRGB &color) {
-	m_baseColor = color;
+    m_baseColor = color;
   }
 
   virtual bool Hit(const LightRay &ray, const float &t_min, const float &t_max, HitRecord &hit_record) = 0;
