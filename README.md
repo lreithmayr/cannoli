@@ -1,4 +1,4 @@
-# Cannoli - Toy Ray Tracer roughly based on "Ray Tracing in One Weekend"
+# Cannoli - Toy Ray Tracer
 
 ### "Leave the gun, take the cannoli" - Goodfellas, starring Ray Liotta. Ray...get it?
 
