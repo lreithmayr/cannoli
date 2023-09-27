@@ -46,16 +46,16 @@ constexpr float VFOV = 30.0;
 constexpr int CANVAS_WIDTH = 800;
 
 // Ray tracer parameters
-constexpr int SAMPLES = 300;
+constexpr int SAMPLES = 100;
 constexpr int MAX_BOUNCES = 8;
 
 int main() {
-  std::string obj_fpath = "./models/blocks.obj";
+  std::string obj_fpath = "../models/blocks.obj";
 
 #if AABB_INT
-  std::string out_path = fmt::format("./images/cannoli_output_samples-{}_maxBounces-{}.ppm", SAMPLES, MAX_BOUNCES);
+  std::string out_path = fmt::format("../images/cannoli_output_samples-{}_maxBounces-{}.ppm", SAMPLES, MAX_BOUNCES);
 #else
-  std::string out_path = "./images/triIndex_output.ppm";
+  std::string out_path = "../images/triIndex_output.ppm";
 #endif
 
   // Create a camera and a canvas on which to render the scene
