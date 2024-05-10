@@ -2,12 +2,33 @@
 #define CANNOLI_INCLUDE_CANVAS_H_
 
 namespace cannoli {
-struct Canvas {
-  Canvas(float ar, int w) : aspect_ratio(ar), width(w) {};
+class Canvas {
+ public:
+  Canvas() = default;
+  void initialize() {
+	m_height = static_cast<int>(m_width / m_aspectRatio);
+  }
 
-  const float aspect_ratio;
-  const int width;
-  const int height = static_cast<int>(width / aspect_ratio);
+  void setAspectRation(float aspect_ratio) {
+	m_aspectRatio = aspect_ratio;
+  }
+
+  void setWidth(float width) {
+	m_width = width;
+  }
+
+  [[nodiscard]] int getHeight() const {
+	return m_height;
+  }
+
+  [[nodiscard]] int getWidth() const {
+	return m_width;
+  }
+
+ private:
+  float m_aspectRatio{};
+  int m_width{};
+  int m_height{};
 };
-}
+} // namespace cannoli
 #endif //CANNOLI_INCLUDE_CANVAS_H_

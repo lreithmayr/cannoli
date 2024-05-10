@@ -4,6 +4,7 @@
 #include <fmt/format.h>
 #include <cmath>
 #include <limits>
+#include <numbers>
 #include <random>
 #include <iostream>
 
@@ -26,13 +27,13 @@ void progressBar(auto progress) {
 	}
   }
   std::cout << "] " << static_cast<int>(progress * 100.0) << " %\r";
-  std::cout.flush();
+  // std::cout.flush();
 }
 
 // Constants
 
 const float infinity = std::numeric_limits<double>::infinity();
-const float pi = 3.1415926535897932385;
+const float pi = std::numbers::pi;
 
 // Utility Functions
 
