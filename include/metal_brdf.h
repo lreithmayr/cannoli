@@ -8,11 +8,11 @@ class MetalBRDF : public Material {
  public:
   MetalBRDF(ColorRGB a, float fuzz) : m_albedo(a), m_fuzz(fuzz) {}
 
-  [[nodiscard]] ColorRGB GetAlbedo() const override {
+  [[nodiscard]] ColorRGB getAlbedo() const override {
 	return m_albedo;
   }
 
-  LightRay Scatter(const LightRay &ray_in, const PointXYZ &hit_point, const Vec3f &surf_normal) override;
+  LightRay scatter(const LightRay &ray_in, const PointXYZ &hit_point, const Vec3f &surf_normal) override;
 
  private:
   ColorRGB m_albedo;

@@ -17,28 +17,28 @@ class Object {
   explicit Object() = default;
   virtual ~Object() = default;
 
-  void SetType(ObjectType type) {
+  void setType(ObjectType type) {
 	m_type = type;
   }
 
-  [[nodiscard]] ObjectType GetType() const {
+  [[nodiscard]] ObjectType getType() const {
 	return m_type;
   }
 
-  [[nodiscard]] std::shared_ptr<Material> GetMaterial() {
+  [[nodiscard]] std::shared_ptr<Material> getMaterial() {
 	return m_material;
   }
 
-  [[nodiscard]] ColorRGB GetBaseColor() {
+  [[nodiscard]] ColorRGB getBaseColor() {
 	return m_baseColor;
   }
 
-  void SetBaseColor(const ColorRGB &color) {
+  void setBaseColor(const ColorRGB &color) {
 	m_baseColor = color;
   }
 
-  virtual bool Hit(const LightRay &ray, const float &t_min, const float &t_max, HitRecord &hit_record) = 0;
-  virtual cannoli::LightRay ComputeSurfaceInteraction(const LightRay &ray, HitRecord &hit_record) = 0;
+  virtual bool hit(const LightRay &ray, const float &t_min, const float &t_max, HitRecord &hit_record) = 0;
+  virtual cannoli::LightRay computeSurfaceInteraction(const LightRay &ray, HitRecord &hit_record) = 0;
 
  protected:
   ObjectType m_type{ObjectType::DEFAULT};

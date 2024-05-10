@@ -16,33 +16,33 @@ class Vec3f {
   Vec3f(float x, float y, float z) : m_vec{x, y, z} {
   }
 
-  void SetXYZ(float x, float y, float z) {
+  void setXYZ(float x, float y, float z) {
 	m_vec[0] = x;
 	m_vec[1] = y;
 	m_vec[2] = z;
   }
 
-  [[nodiscard]] float GetX() const {
+  [[nodiscard]] float getX() const {
 	return m_vec[0];
   }
 
-  void SetX(const float x) {
+  void setX(const float x) {
 	m_vec[0] = x;
   }
 
-  [[nodiscard]] float GetY() const {
+  [[nodiscard]] float getY() const {
 	return m_vec[1];
   }
 
-  void SetY(const float y) {
+  void setY(const float y) {
 	m_vec[0] = y;
   }
 
-  [[nodiscard]] float GetZ() const {
+  [[nodiscard]] float getZ() const {
 	return m_vec[2];
   }
 
-  void SetZ(const float z) {
+  void setZ(const float z) {
 	m_vec[0] = z;
   }
 
@@ -88,11 +88,11 @@ class Vec3f {
 	return out << vec[0] << ' ' << vec[1] << ' ' << vec[2];
   }
 
-  [[nodiscard]] float length() const {
+  [[nodiscard]] float computeLength() const {
 	return (std::sqrt(m_vec[0] * m_vec[0] + m_vec[1] * m_vec[1] + m_vec[2] * m_vec[2]));
   }
 
-  [[nodiscard]] float length_squared() const {
+  [[nodiscard]] float computeLengthSquared() const {
 	return (m_vec[0] * m_vec[0] + m_vec[1] * m_vec[1] + m_vec[2] * m_vec[2]);
   }
 
@@ -102,21 +102,21 @@ class Vec3f {
   }
 
   [[nodiscard]] Vec3f normalize() const {
-	return (*this * (1 / this->length()));
+	return (*this * (1 / this->computeLength()));
   }
 
-  inline static Vec3f random() {
+  static Vec3f random() {
 	return Vec3f{random_float(), random_float(), random_float()};
   }
 
-  inline static Vec3f random(float min, float max) {
+  static Vec3f random(float min, float max) {
 	return Vec3f{random_float(min, max), random_float(min, max), random_float(min, max)};
   }
 
-  static Vec3f rand_within_unit_sphere() {
+  static Vec3f computeRandWithinUnitSphere() {
 	while (true) {
 	  auto p = Vec3f::random(-1, 1);
-	  if (p.length_squared() >= 1) {
+	  if (p.computeLengthSquared() >= 1) {
 		continue;
 	  }
 	  return p;
@@ -143,11 +143,11 @@ class Vec3f {
 		  vec1[0] * vec2[1] - vec1[1] * vec2[0]};
 }
 
-[[nodiscard]] inline Vec3f Permute(const Vec3f &vec, const int x, const int y, const int z) {
+[[nodiscard]] inline Vec3f permute(const Vec3f &vec, const int x, const int y, const int z) {
   return {vec[x], vec[y], vec[z]};
 }
 
-inline Vec3f YawPitchToXYZ(const float &yaw, const float &pitch) {
+inline Vec3f yawPitchToXYZ(const float &yaw, const float &pitch) {
   float cos_pitch = cos(pitch);
   float x = cos(yaw) * cos_pitch;
   float y = sin(yaw) * cos_pitch;
@@ -156,7 +156,7 @@ inline Vec3f YawPitchToXYZ(const float &yaw, const float &pitch) {
 }
 
 // Returns the index of the largest value in the vector
-inline int MaxDimension(const Vec3f &vec) {
+inline int getMaxDimension(const Vec3f &vec) {
   int max = 0;
   if (vec[1] > vec[0] && vec[1] > vec[2]) {
 	max = 1;
@@ -167,13 +167,13 @@ inline int MaxDimension(const Vec3f &vec) {
   return max;
 }
 
-inline Vec3f Abs(const Vec3f &vec) {
+inline Vec3f abs(const Vec3f &vec) {
   return {std::abs(vec[0]), std::abs(vec[1]), std::abs(vec[2])};
 }
 
 // Inlined functions providing interop with Vector3 struct from objl namespace
 
-[[nodiscard]] inline Vec3f Vector3ToVec3f(const objl::Vector3 &objl_vector3) {
+[[nodiscard]] inline Vec3f vec3ToVec3f(const objl::Vector3 &objl_vector3) {
   return {objl_vector3.X, objl_vector3.Y, objl_vector3.Z};
 }
 
@@ -203,8 +203,8 @@ template <> struct fmt::formatter<cannoli::Vec3f> {
   auto format(const cannoli::Vec3f& v, FormatContext& ctx) const -> decltype(ctx.out()) {
 	// ctx.out() is an output iterator to write to.
 	return presentation == 'f'
-		   ? fmt::format_to(ctx.out(), "(x = {:.1f}, y = {:.1f}, z = {:.1f})", v.GetX(), v.GetY(), v.GetZ())
-		   : fmt::format_to(ctx.out(), "(x = {:.1e}, y = {:.1e}, z = {:.1f})", v.GetX(), v.GetY(), v.GetZ());
+		   ? fmt::format_to(ctx.out(), "(x = {:.1f}, y = {:.1f}, z = {:.1f})", v.getX(), v.getY(), v.getZ())
+		   : fmt::format_to(ctx.out(), "(x = {:.1e}, y = {:.1e}, z = {:.1f})", v.getX(), v.getY(), v.getZ());
   }
 };
 #endif //CANNOLI_INCLUDE_VEC3F_H_

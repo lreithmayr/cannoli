@@ -8,20 +8,20 @@ cannoli::Mesh::Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material) :
 
   // Convert the vertex positions from objl's Vector3 format to Vec3f
   for (const auto &objl_vertex : mesh.Vertices) {
-	m_vertices.push_back(cannoli::Vector3ToVec3f(objl_vertex.Position));
+	m_vertices.push_back(cannoli::vec3ToVec3f(objl_vertex.Position));
   }
 
 
   // Compute the mesh's axis-alignes bounding box (AABB)
-  ComputeAABB();
+  computeAABB();
   fmt::print("Constructed Mesh {} \n Number of Vertices: {} \n Number of Faces: {} \n", m_name, m_vertices.size(), m_faceCount);
 }
 
-bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
-										 const float &t_min,
-										 const float &t_max,
-										 cannoli::HitRecord &hit_record,
-										 int triangle_nr) {
+bool cannoli::Mesh::computeTriangleIntersection(LightRay &ray,
+												const float &t_min,
+												const float &t_max,
+												HitRecord &hit_record,
+												int triangle_nr) {
 
   // Get triangle vertices from mesh
   cannoli::Vec3f v0 = m_vertices[m_indices[triangle_nr * 3]];
@@ -30,38 +30,38 @@ bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
 
   // Transform the coordinates of the vertices to the CS of the ray
   // 1) Translate vertices based on the ray origin
-  cannoli::PointXYZ v0t = v0 - ray.GetOrigin();
-  cannoli::PointXYZ v1t = v1 - ray.GetOrigin();
-  cannoli::PointXYZ v2t = v2 - ray.GetOrigin();
+  cannoli::PointXYZ v0t = v0 - ray.getOrigin();
+  cannoli::PointXYZ v1t = v1 - ray.getOrigin();
+  cannoli::PointXYZ v2t = v2 - ray.getOrigin();
 
-  // 2) Permute the components such that the z-dimension is the one where the absolute value of the ray's direction
+  // 2) permute the components such that the z-dimension is the one where the absolute value of the ray's direction
   // is largest
-  cannoli::Vec3f ray_dir_permuted = ray.PermuteDirection();
-  std::array<int, 3> k_vals = ray.GetKVals();
+  cannoli::Vec3f ray_dir_permuted = ray.permuteDirection();
+  std::array<int, 3> k_vals = ray.getKVals();
 
-  v0t = Permute(v0t, k_vals.at(0), k_vals.at(1), k_vals.at(2));
-  v1t = Permute(v1t, k_vals.at(0), k_vals.at(1), k_vals.at(2));
-  v2t = Permute(v2t, k_vals.at(0), k_vals.at(1), k_vals.at(2));
+  v0t = permute(v0t, k_vals.at(0), k_vals.at(1), k_vals.at(2));
+  v1t = permute(v1t, k_vals.at(0), k_vals.at(1), k_vals.at(2));
+  v2t = permute(v2t, k_vals.at(0), k_vals.at(1), k_vals.at(2));
 
   // 3) Shear transformation to align the ray direction with the +z axis (for now only for x and y coordinates)
-  float ray_dir_permuted_z = ray_dir_permuted.GetZ();
-  float s_x = -ray_dir_permuted.GetX() / ray_dir_permuted_z;
-  float s_y = -ray_dir_permuted.GetY() / ray_dir_permuted_z;
+  float ray_dir_permuted_z = ray_dir_permuted.getZ();
+  float s_x = -ray_dir_permuted.getX() / ray_dir_permuted_z;
+  float s_y = -ray_dir_permuted.getY() / ray_dir_permuted_z;
   float s_z = 1.f / ray_dir_permuted_z;
 
-  float v0t_x = v0t.GetX();
-  float v0t_y = v0t.GetY();
-  float v1t_x = v1t.GetX();
-  float v1t_y = v1t.GetY();
-  float v2t_x = v2t.GetX();
-  float v2t_y = v2t.GetY();
+  float v0t_x = v0t.getX();
+  float v0t_y = v0t.getY();
+  float v1t_x = v1t.getX();
+  float v1t_y = v1t.getY();
+  float v2t_x = v2t.getX();
+  float v2t_y = v2t.getY();
 
-  v0t_x += s_x * v0t.GetZ();
-  v0t_y += s_y * v0t.GetZ();
-  v1t_x += s_x * v1t.GetZ();
-  v1t_y += s_y * v1t.GetZ();
-  v2t_x += s_x * v2t.GetZ();
-  v2t_y += s_y * v2t.GetZ();
+  v0t_x += s_x * v0t.getZ();
+  v0t_y += s_y * v0t.getZ();
+  v1t_x += s_x * v1t.getZ();
+  v1t_y += s_y * v1t.getZ();
+  v2t_x += s_x * v2t.getZ();
+  v2t_y += s_y * v2t.getZ();
 
   // 4) Compute edge function coefficients
   float e0 = v1t_x * v2t_y - v1t_y * v2t_x;
@@ -77,9 +77,9 @@ bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
 	return false;
   }
 
-  float v0t_sz = v0t.GetZ() * s_z;
-  float v1t_sz = v1t.GetZ() * s_z;
-  float v2t_sz = v2t.GetZ() * s_z;
+  float v0t_sz = v0t.getZ() * s_z;
+  float v1t_sz = v1t.getZ() * s_z;
+  float v2t_sz = v2t.getZ() * s_z;
 
   float t_scaled = e0 * v0t_sz + e1 * v1t_sz + e2 * v2t_sz;
 
@@ -99,7 +99,7 @@ bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
   Vec3f normal = cross(v1_v0, v2_v0);
 
   hit_record.t = t;
-  hit_record.hit_point = ray.Position(t);
+  hit_record.hit_point = ray.getPosition(t);
   hit_record.u = u;
   hit_record.v = v;
   hit_record.surface_normal = normal;
@@ -107,15 +107,16 @@ bool cannoli::Mesh::RayTriangleIntersect(LightRay &ray,
   return true;
 }
 
-cannoli::LightRay cannoli::Mesh::ComputeSurfaceInteraction(const cannoli::LightRay &ray,
-														   const cannoli::HitRecord &hit_record) {
-  return m_meshMaterial->Scatter(ray, hit_record.hit_point, hit_record.surface_normal);
+cannoli::LightRay cannoli::Mesh::computeSurfaceInteraction(
+  const LightRay &ray,
+  const HitRecord &hit_record) {
+  return m_meshMaterial->scatter(ray, hit_record.hit_point, hit_record.surface_normal);
 }
 
-void cannoli::Mesh::ComputeAABB() {
+void cannoli::Mesh::computeAABB() {
   for (auto &pt : m_vertices) {
-	if (!m_aabb.IsInside(pt)) {
-	  m_aabb = m_aabb.Expand(pt);
+	if (!m_aabb.isInside(pt)) {
+	  m_aabb = m_aabb.expand(pt);
 	}
   }
 }

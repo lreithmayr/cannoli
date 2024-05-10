@@ -11,7 +11,7 @@
 
 namespace cannoli {
 
-void ProgressBar(auto progress) {
+void progressBar(auto progress) {
   int barWidth = 70;
 
   std::cout << "[";

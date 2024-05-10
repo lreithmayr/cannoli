@@ -18,22 +18,22 @@ class AABB {
 	m_pMax = PointXYZ(minNum, minNum, minNum);
   };
   explicit AABB(const PointXYZ &p1, const PointXYZ &p2) :
-	m_pMin(std::min(p1.GetX(), p2.GetX()), std::min(p1.GetY(), p2.GetY()), std::min(p1.GetZ(), p2.GetZ())),
-	m_pMax(std::max(p1.GetX(), p2.GetX()), std::max(p1.GetY(), p2.GetY()), std::max(p1.GetZ(), p2.GetZ())) {};
+	m_pMin(std::min(p1.getX(), p2.getX()), std::min(p1.getY(), p2.getY()), std::min(p1.getZ(), p2.getZ())),
+	m_pMax(std::max(p1.getX(), p2.getX()), std::max(p1.getY(), p2.getY()), std::max(p1.getZ(), p2.getZ())) {};
 
-  PointXYZ GetPMin() {
+  PointXYZ getPMin() {
 	return m_pMin;
   }
 
-  PointXYZ GetPMax() {
+  PointXYZ getPMax() {
 	return m_pMax;
   }
 
-  bool AABBIntersection(const LightRay &ray, float t_min, float t_max);
+  bool computeAABBIntersection(const LightRay &ray, float t_min, float t_max);
 
-  bool IsInside(PointXYZ &pt);
+  bool isInside(PointXYZ &pt);
 
-  cannoli::AABB Expand(Vec3f &pt);
+  cannoli::AABB expand(Vec3f &pt);
 
  private:
   PointXYZ m_pMin, m_pMax;

@@ -1,9 +1,9 @@
 #include "lambertian_brdf.h"
 
-cannoli::LightRay cannoli::LambertianBRDF::Scatter(const LightRay &ray_in,
+cannoli::LightRay cannoli::LambertianBRDF::scatter(const LightRay &ray_in,
 												   const PointXYZ &hit_point,
 												   const Vec3f &surf_normal) {
-  Vec3f scatter_dir = surf_normal + cannoli::Vec3f::rand_within_unit_sphere();
+  Vec3f scatter_dir = surf_normal + cannoli::Vec3f::computeRandWithinUnitSphere();
 
   double eps = 1e-8;
   if (std::fabs(scatter_dir[0]) < eps && std::fabs(scatter_dir[0]) < eps && std::fabs(scatter_dir[0]) < eps) {

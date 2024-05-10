@@ -18,17 +18,17 @@ class Vec3fTest : public ::testing::Test {
 TEST_F(Vec3fTest, InitsToZero) {
   cannoli::Vec3f vec;
 
-  EXPECT_FLOAT_EQ(vec.GetX(), 0);
-  EXPECT_FLOAT_EQ(vec.GetY(), 0);
-  EXPECT_FLOAT_EQ(vec.GetZ(), 0);
+  EXPECT_FLOAT_EQ(vec.getX(), 0);
+  EXPECT_FLOAT_EQ(vec.getY(), 0);
+  EXPECT_FLOAT_EQ(vec.getZ(), 0);
 }
 
 TEST_F(Vec3fTest, InitsManually) {
   cannoli::Vec3f vec(1.0, 7.0, 3.5);
 
-  EXPECT_FLOAT_EQ(vec.GetX(), 1.0);
-  EXPECT_FLOAT_EQ(vec.GetY(), 7.0);
-  EXPECT_FLOAT_EQ(vec.GetZ(), 3.5);
+  EXPECT_FLOAT_EQ(vec.getX(), 1.0);
+  EXPECT_FLOAT_EQ(vec.getY(), 7.0);
+  EXPECT_FLOAT_EQ(vec.getZ(), 3.5);
 }
 
 TEST_F(Vec3fTest, VecElementAccess) {
@@ -84,7 +84,7 @@ TEST_F(Vec3fTest, VecSubtraction) {
 
 TEST_F(Vec3fTest, VecLength) {
   cannoli::Vec3f vec_len(0.0, 7.0, 0.0);
-  EXPECT_FLOAT_EQ(vec_len.length(), 7);
+  EXPECT_FLOAT_EQ(vec_len.computeLength(), 7);
 }
 
 TEST_F(Vec3fTest, VecDotProduct) {
@@ -101,27 +101,27 @@ TEST_F(Vec3fTest, VecCross) {
 
 TEST_F(Vec3fTest, VecNormalized) {
   cannoli::Vec3f vec1_normalized = vec1.normalize();
-  EXPECT_FLOAT_EQ(vec1_normalized[0], vec1[0] * (1 / vec1.length()));
-  EXPECT_FLOAT_EQ(vec1_normalized[1], vec1[1] * (1 / vec1.length()));
-  EXPECT_FLOAT_EQ(vec1_normalized[2], vec1[2] * (1 / vec1.length()));
+  EXPECT_FLOAT_EQ(vec1_normalized[0], vec1[0] * (1 / vec1.computeLength()));
+  EXPECT_FLOAT_EQ(vec1_normalized[1], vec1[1] * (1 / vec1.computeLength()));
+  EXPECT_FLOAT_EQ(vec1_normalized[2], vec1[2] * (1 / vec1.computeLength()));
 }
 
 TEST_F(Vec3fTest, VecPermute) {
-  cannoli::Vec3f vec1_permuted = cannoli::Permute(vec1, 2, 0, 1);
+  cannoli::Vec3f vec1_permuted = cannoli::permute(vec1, 2, 0, 1);
   EXPECT_FLOAT_EQ(vec1_permuted[0], vec1[2]);
   EXPECT_FLOAT_EQ(vec1_permuted[1], vec1[0]);
   EXPECT_FLOAT_EQ(vec1_permuted[2], vec1[1]);
 }
 
 TEST_F(Vec3fTest, MaxDimension) {
-  int max1 = MaxDimension(vec1);
-  int max2 = MaxDimension(vec2);
+  int max1 = getMaxDimension(vec1);
+  int max2 = getMaxDimension(vec2);
   EXPECT_EQ(max1, 1);
   EXPECT_EQ(max2, 2);
 }
 
 TEST_F(Vec3fTest, Abs) {
-  cannoli::Vec3f vec_abs = cannoli::Abs(vec2);
+  cannoli::Vec3f vec_abs = cannoli::abs(vec2);
   EXPECT_FLOAT_EQ(vec_abs[0], 2.0);
   EXPECT_FLOAT_EQ(vec_abs[1], 5.0);
   EXPECT_FLOAT_EQ(vec_abs[2], 7.23);

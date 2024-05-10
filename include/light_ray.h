@@ -12,40 +12,40 @@ class LightRay {
   LightRay(const PointXYZ &origin, const Vec3f &dir) : m_origin(origin), m_dir(dir) {};
   LightRay(const PointXYZ &origin, const Vec3f &dir, const float t) : m_origin(origin), m_dir(dir), m_time(t) {};
 
-  [[nodiscard]] PointXYZ GetOrigin() const {
+  [[nodiscard]] PointXYZ getOrigin() const {
 	return m_origin;
   }
 
-  void SetOrigin(const PointXYZ origin) {
+  void setOrigin(const PointXYZ origin) {
 	m_origin = origin;
   }
 
-  [[nodiscard]] Vec3f GetDirection() const {
+  [[nodiscard]] Vec3f getDirection() const {
 	return m_dir;
   }
 
-  void SetDirection(const Vec3f dir) {
+  void setDirection(const Vec3f dir) {
 	m_dir = dir;
   }
 
-  [[nodiscard]] float GetTime() const {
+  [[nodiscard]] float getTime() const {
 	return m_time;
   }
 
-  void SetTime(const float t) {
+  void setTime(const float t) {
 	m_time = t;
   }
 
-  [[nodiscard]] std::array<int, 3> GetKVals() {
+  [[nodiscard]] std::array<int, 3> getKVals() {
 	return { m_kx, m_ky, m_kz };
   }
 
-  [[nodiscard]] PointXYZ Position(const float t) const {
+  [[nodiscard]] PointXYZ getPosition(const float t) const {
 	return (m_origin + m_dir * t);
   }
 
-  Vec3f PermuteDirection() {
-	m_kz = cannoli::MaxDimension(cannoli::Abs(m_dir));
+  Vec3f permuteDirection() {
+	m_kz = cannoli::getMaxDimension(cannoli::abs(m_dir));
 	m_kx = m_kz + 1;
 	if (m_kx == 3) {
 	  m_kx = 0;
@@ -54,7 +54,7 @@ class LightRay {
 	if (m_ky == 3) {
 	  m_ky = 0;
 	}
-	return Permute(m_dir, m_kx, m_ky, m_kz);
+	return permute(m_dir, m_kx, m_ky, m_kz);
   }
 
  protected:

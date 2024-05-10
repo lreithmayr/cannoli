@@ -138,9 +138,9 @@ struct Vector3 {
 // Structure: Vertex
 //
 // Description: Model Vertex object that holds
-//	a Position, Normal, and Texture Coordinate
+//	a getPosition, Normal, and Texture Coordinate
 struct Vertex {
-  // Position Vector
+  // getPosition Vector
   Vector3 Position;
 
   // Normal Vector
@@ -474,7 +474,7 @@ class Loader {
 		outputIndicator = 0;
 #endif
 	  }
-	  // Generate a Vertex Position
+	  // Generate a Vertex getPosition
 	  if (algorithm::firstToken(curline) == "v") {
 		std::vector<std::string> spos;
 		Vector3 vpos;
@@ -515,7 +515,7 @@ class Loader {
 		std::vector<Vertex> vVerts;
 		GenVerticesFromRawOBJ(vVerts, Positions, TCoords, Normals, curline);
 
-		// Add Vertices
+		// addMesh Vertices
 		for (int i = 0; i < int(vVerts.size()); i++) {
 		  Vertices.push_back(vVerts[i]);
 
@@ -526,7 +526,7 @@ class Loader {
 
 		VertexTriangluation(iIndices, vVerts);
 
-		// Add Indices
+		// addMesh Indices
 		for (int i = 0; i < int(iIndices.size()); i++) {
 		  unsigned int indnum = (unsigned int)((Vertices.size()) - vVerts.size()) + iIndices[i];
 		  Indices.push_back(indnum);
@@ -670,18 +670,18 @@ class Loader {
 
 	  // Check for position & texture - v1/vt1
 	  if (svert.size() == 2) {
-		// Position & Texture
+		// getPosition & Texture
 		vtype = 2;
 	  }
 
-	  // Check for Position, Texture and Normal - v1/vt1/vn1
-	  // or if Position and Normal - v1//vn1
+	  // Check for getPosition, Texture and Normal - v1/vt1/vn1
+	  // or if getPosition and Normal - v1//vn1
 	  if (svert.size() == 3) {
 		if (svert[1] != "") {
-		  // Position, Texture, and Normal
+		  // getPosition, Texture, and Normal
 		  vtype = 4;
 		} else {
-		  // Position & Normal
+		  // getPosition & Normal
 		  vtype = 3;
 		}
 	  }

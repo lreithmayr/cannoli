@@ -11,11 +11,11 @@ class Material {
   Material() = default;
   virtual ~Material() = default;
 
-  [[nodiscard]] virtual ColorRGB GetAlbedo() const {
+  [[nodiscard]] virtual ColorRGB getAlbedo() const {
 	return m_albedo;
   }
 
-  virtual LightRay Scatter(const LightRay &ray_in, const PointXYZ &hit_point, const Vec3f &surf_normal) = 0;
+  virtual LightRay scatter(const LightRay &ray_in, const PointXYZ &hit_point, const Vec3f &surf_normal) = 0;
 
  protected:
   ColorRGB m_albedo;

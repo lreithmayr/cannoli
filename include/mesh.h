@@ -18,34 +18,34 @@ class Mesh {
  public:
   explicit Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material);
 
-  [[nodiscard]] std::vector<Vec3f> GetVertices() const {
+  [[nodiscard]] std::vector<Vec3f> getVertices() const {
 	return m_vertices;
   }
 
-  [[nodiscard]] std::vector<uint> GetIndices() const {
+  [[nodiscard]] std::vector<uint> getIndices() const {
 	return m_indices;
   }
 
-  [[nodiscard]] int GetFaceCount() const {
+  [[nodiscard]] int getFaceCount() const {
 	return m_faceCount;
   }
 
-  [[nodiscard]] std::shared_ptr<Material> GetMaterial() const {
+  [[nodiscard]] std::shared_ptr<Material> getMaterial() const {
 	return m_meshMaterial;
   }
 
-  [[nodiscard]] std::shared_ptr<AABB> GetAABB() const {
+  [[nodiscard]] std::shared_ptr<AABB> getAABB() const {
 	return std::make_shared<AABB>(m_aabb);
   }
 
-  bool RayTriangleIntersect(LightRay &ray,
-							const float &t_min,
-							const float &t_max,
-							HitRecord &hit_record,
-							int triangle_nr);
+  bool computeTriangleIntersection(LightRay &ray,
+								   const float &t_min,
+								   const float &t_max,
+								   HitRecord &hit_record,
+								   int triangle_nr);
 
-  LightRay ComputeSurfaceInteraction(const LightRay &ray, const HitRecord &hit_record);
-  void ComputeAABB();
+  LightRay computeSurfaceInteraction(const LightRay &ray, const HitRecord &hit_record);
+  void computeAABB();
 
  private:
   std::vector<cannoli::Vec3f> m_vertices;
