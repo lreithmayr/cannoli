@@ -22,13 +22,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 // OBJ_Loader.h - A Single Header OBJ Model Loader
-
 #pragma once
 
 // Iostream - STD I/O Library
 #include <iostream>
 
 // Vector - STD Vector/Array Library
+#include <numbers>
 #include <vector>
 
 // String - STD String Library
@@ -549,9 +549,11 @@ class Loader {
 		  while (1) {
 			tempMesh.MeshName = meshname + "_" + std::to_string(i);
 
-			for (auto &m : LoadedMeshes)
-			  if (m.MeshName == tempMesh.MeshName)
+			for (auto &m : LoadedMeshes) {
+			  if (m.MeshName == tempMesh.MeshName) {
 				continue;
+}
+}
 			break;
 		  }
 
@@ -788,12 +790,15 @@ class Loader {
 		if (tVerts.size() == 3) {
 		  // Create a triangle from pCur, pPrev, pNext
 		  for (int j = 0; j < int(tVerts.size()); j++) {
-			if (iVerts[j].Position == pCur.Position)
+			if (iVerts[j].Position == pCur.Position) {
 			  oIndices.push_back(j);
-			if (iVerts[j].Position == pPrev.Position)
+}
+			if (iVerts[j].Position == pPrev.Position) {
 			  oIndices.push_back(j);
-			if (iVerts[j].Position == pNext.Position)
+}
+			if (iVerts[j].Position == pNext.Position) {
 			  oIndices.push_back(j);
+}
 		  }
 
 		  tVerts.clear();
@@ -802,12 +807,15 @@ class Loader {
 		if (tVerts.size() == 4) {
 		  // Create a triangle from pCur, pPrev, pNext
 		  for (int j = 0; j < int(iVerts.size()); j++) {
-			if (iVerts[j].Position == pCur.Position)
+			if (iVerts[j].Position == pCur.Position) {
 			  oIndices.push_back(j);
-			if (iVerts[j].Position == pPrev.Position)
+}
+			if (iVerts[j].Position == pPrev.Position) {
 			  oIndices.push_back(j);
-			if (iVerts[j].Position == pNext.Position)
+}
+			if (iVerts[j].Position == pNext.Position) {
 			  oIndices.push_back(j);
+}
 		  }
 
 		  Vector3 tempVec;
@@ -821,12 +829,15 @@ class Loader {
 
 		  // Create a triangle from pCur, pPrev, pNext
 		  for (int j = 0; j < int(iVerts.size()); j++) {
-			if (iVerts[j].Position == pPrev.Position)
+			if (iVerts[j].Position == pPrev.Position) {
 			  oIndices.push_back(j);
-			if (iVerts[j].Position == pNext.Position)
+}
+			if (iVerts[j].Position == pNext.Position) {
 			  oIndices.push_back(j);
-			if (iVerts[j].Position == tempVec)
+}
+			if (iVerts[j].Position == tempVec) {
 			  oIndices.push_back(j);
+}
 		  }
 
 		  tVerts.clear();
@@ -834,10 +845,12 @@ class Loader {
 		}
 
 		// If Vertex is not an interior vertex
-		float angle = math::AngleBetweenV3(pPrev.Position - pCur.Position, pNext.Position - pCur.Position)
-		  * (180 / 3.14159265359);
-		if (angle <= 0 && angle >= 180)
+		float angle = NAN;
+		angle = math::AngleBetweenV3(pPrev.Position - pCur.Position, pNext.Position - pCur.Position)
+		  * (180 / std::numbers::pi);
+		if (angle <= 0 && angle >= 180) {
 		  continue;
+}
 
 		// If any vertices are within this triangle
 		bool inTri = false;
@@ -849,17 +862,21 @@ class Loader {
 			break;
 		  }
 		}
-		if (inTri)
+		if (inTri) {
 		  continue;
+}
 
 		// Create a triangle from pCur, pPrev, pNext
 		for (int j = 0; j < int(iVerts.size()); j++) {
-		  if (iVerts[j].Position == pCur.Position)
+		  if (iVerts[j].Position == pCur.Position) {
 			oIndices.push_back(j);
-		  if (iVerts[j].Position == pPrev.Position)
+}
+		  if (iVerts[j].Position == pPrev.Position) {
 			oIndices.push_back(j);
-		  if (iVerts[j].Position == pNext.Position)
+}
+		  if (iVerts[j].Position == pNext.Position) {
 			oIndices.push_back(j);
+}
 		}
 
 		// Delete pCur from the list
@@ -876,26 +893,30 @@ class Loader {
 	  }
 
 	  // if no triangles were created
-	  if (oIndices.size() == 0)
+	  if (oIndices.size() == 0) {
 		break;
+}
 
 	  // if no more vertices
-	  if (tVerts.size() == 0)
+	  if (tVerts.size() == 0) {
 		break;
+}
 	}
   }
 
   // Load Materials from .mtl file
-  bool LoadMaterials(std::string path) {
+  bool LoadMaterials(const std::string& path) {
 	// If the file is not a material file return false
-	if (path.substr(path.size() - 4, path.size()) != ".mtl")
+	if (path.substr(path.size() - 4, path.size()) != ".mtl") {
 	  return false;
+	}
 
 	std::ifstream file(path);
 
 	// If the file is not found return false
-	if (!file.is_open())
+	if (!file.is_open()) {
 	  return false;
+}
 
 	Material tempMaterial;
 
@@ -935,8 +956,9 @@ class Loader {
 		std::vector<std::string> temp;
 		algorithm::split(algorithm::tail(curline), temp, " ");
 
-		if (temp.size() != 3)
+		if (temp.size() != 3) {
 		  continue;
+}
 
 		tempMaterial.Ka.X = std::stof(temp[0]);
 		tempMaterial.Ka.Y = std::stof(temp[1]);
@@ -947,8 +969,9 @@ class Loader {
 		std::vector<std::string> temp;
 		algorithm::split(algorithm::tail(curline), temp, " ");
 
-		if (temp.size() != 3)
+		if (temp.size() != 3) {
 		  continue;
+}
 
 		tempMaterial.Kd.X = std::stof(temp[0]);
 		tempMaterial.Kd.Y = std::stof(temp[1]);
@@ -959,8 +982,9 @@ class Loader {
 		std::vector<std::string> temp;
 		algorithm::split(algorithm::tail(curline), temp, " ");
 
-		if (temp.size() != 3)
+		if (temp.size() != 3) {
 		  continue;
+}
 
 		tempMaterial.Ks.X = std::stof(temp[0]);
 		tempMaterial.Ks.Y = std::stof(temp[1]);
@@ -1016,11 +1040,12 @@ class Loader {
 
 	// Test to see if anything was loaded
 	// If not return false
-	if (LoadedMaterials.empty())
+	if (LoadedMaterials.empty()) {
 	  return false;
 	  // If so return true
-	else
+	} else {
 	  return true;
+}
   }
 };
-}
+}  // namespace objl

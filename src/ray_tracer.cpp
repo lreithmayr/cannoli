@@ -1,7 +1,7 @@
 #include "ray_tracer.h"
 
 void cannoli::RayTracer::trace() {
-  SetupImage();
+  setupImage();
 
   HitRecord hit_record;
   auto meshes_in_scene = m_scene.getMeshesInScene();
@@ -12,20 +12,19 @@ void cannoli::RayTracer::trace() {
 	// cannoli::progressBar(1 - (static_cast<float>(y) / static_cast<float>(canvas_height)));
 	std::cout << fmt::format("Progress: {}\n", static_cast<int>((1 - (static_cast<float>(y) / static_cast<float>(canvas_height))) * 100));
 	for (int x = 0; x < canvas_width; ++x) {
-	  ResetPixel();
+	  resetPixel();
 	  for (int s = 0; s < m_samples; ++s) {
 		if (m_hitBackground) {
 		  m_hitBackground = false;
 		  continue;
 		}
-		Vec3f dir = GenerateDirection(x, y);
-		LightRay ray = EmitRay(m_camera.getOrigin(), dir);
+		Vec3f dir = generateDirection(x, y);
+		LightRay ray = emitRay(m_camera.getOrigin(), dir);
 		m_pixelColor += renderPixel(ray, m_maxBounces, hit_record, infinity, meshes_in_scene);
 	  }
-	  WritePPMImage(m_ppmImage, m_samples);
+	  writePPMImage(m_ppmImage, m_samples);
 	}
   }
-
   m_ppmImage.close();
 }
 
@@ -47,7 +46,7 @@ cannoli::ColorRGB cannoli::RayTracer::renderPixel(cannoli::LightRay &ray,
   for (const auto &mesh : meshes_in_scene) {
 	int nr_of_triangles = mesh->getFaceCount();
 	if (mesh->getAABB()->computeAABBIntersection(ray, eps, closest_so_far)) {
-	  for (size_t i = 0; i < nr_of_triangles; ++i) {
+	  for (int i = 0; i < nr_of_triangles; ++i) {
 		if (mesh->computeTriangleIntersection(ray, eps, closest_so_far, temp_hit_record, i)) {
 		  closest_mesh = mesh;
 		  closest_so_far = temp_hit_record.t < closest_so_far ? temp_hit_record.t : closest_so_far;
@@ -64,10 +63,10 @@ cannoli::ColorRGB cannoli::RayTracer::renderPixel(cannoli::LightRay &ray,
 	return 1.1 * albedo * renderPixel(scattered_ray, n_bounces - 1, hit_record, closest_so_far, meshes_in_scene);
   }
   m_hitBackground = true;
-  return PaintBackground(ray);
+  return paintBackground(ray);
 }
 
-void cannoli::RayTracer::WritePPMImage(std::ofstream &stream, int samples) {
+void cannoli::RayTracer::writePPMImage(std::ofstream &stream, int samples) {
   float r = m_pixelColor.getX();
   float g = m_pixelColor.getY();
   float b = m_pixelColor.getZ();
@@ -81,20 +80,20 @@ void cannoli::RayTracer::WritePPMImage(std::ofstream &stream, int samples) {
 		 << static_cast<int>(256 * clamp(b, 0.0, 0.999)) << '\n';
 }
 
-void cannoli::RayTracer::SetupImage() {
+void cannoli::RayTracer::setupImage() {
   m_ppmImage.open(m_outFile);
   m_ppmImage << "P3\n" << m_canvas.getWidth() << ' ' << m_canvas.getHeight() << "\n255\n";
 }
 
-void cannoli::RayTracer::ResetPixel() {
+void cannoli::RayTracer::resetPixel() {
   m_pixelColor.setXYZ(0, 0, 0);
 }
 
-cannoli::LightRay cannoli::RayTracer::EmitRay(const cannoli::Vec3f &origin, const cannoli::Vec3f &direction) {
+cannoli::LightRay cannoli::RayTracer::emitRay(const Vec3f &origin, const Vec3f &direction) {
   return cannoli::LightRay(origin, direction);
 }
 
-cannoli::Vec3f cannoli::RayTracer::GenerateDirection(const int pixel_x, const int pixel_y) {
+cannoli::Vec3f cannoli::RayTracer::generateDirection(const int pixel_x, const int pixel_y) {
   auto u = (pixel_x + random_float()) / (m_canvas.getWidth() - 1);
   auto v = (pixel_y + random_float()) / (m_canvas.getHeight() - 1);
   Vec3f
@@ -102,7 +101,7 @@ cannoli::Vec3f cannoli::RayTracer::GenerateDirection(const int pixel_x, const in
   return dir;
 }
 
-cannoli::ColorRGB cannoli::RayTracer::PaintBackground(cannoli::LightRay &ray) {
+cannoli::ColorRGB cannoli::RayTracer::paintBackground(LightRay &ray) {
   cannoli::Vec3f unit_direction = ray.getDirection().normalize();
   float t = 0.5 * (unit_direction.getY() + 1.0);
   return 1.5 * ((1.0 - t) * ColorRGB(1.0, 1.0, 1.0) + t * ColorRGB(0.5, 0.7, 1.0));

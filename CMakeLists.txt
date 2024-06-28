@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.23)
+set(CMAKE_POLICY_DEFAULT_CMP0135 NEW)
 
 project(cannoli)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -fconcepts -pthread  -DAABB_INT")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O3 -fconcepts -pthread -DAABB_INT")
 
 # === PROJECT SETUP ===
 
@@ -20,6 +21,7 @@ add_library(${PROJECT_NAME} SHARED
         src/metal_brdf.cpp
         src/mesh.cpp
         src/aabb.cpp
+        src/bvh.cpp
 
         # Header Files
         include/utils.h
@@ -40,7 +42,9 @@ add_library(${PROJECT_NAME} SHARED
         include/metal_brdf.h
         include/mesh.h
         include/obj_file_loader.h
-        include/aabb.h)
+        include/aabb.h
+        include/bvh.h
+)
 
 # === DEPENDENCIES ===
 

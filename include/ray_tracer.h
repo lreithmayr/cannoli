@@ -21,26 +21,26 @@ class RayTracer {
   RayTracer() = default;
 
   void trace();
-  cannoli::ColorRGB renderPixel(
+  ColorRGB renderPixel(
 	cannoli::LightRay &ray,
 	int n_bounces,
 	HitRecord &hit_record,
 	float t_max,
 	std::vector<std::shared_ptr<Mesh>> &meshes_in_scene);
-  void WritePPMImage(std::ofstream &stream, int samples);
-  void SetupImage();
-  void ResetPixel();
-  Vec3f GenerateDirection(int pixel_x, int pixel_y);
-  static LightRay EmitRay(const Vec3f &origin, const Vec3f &direction);
-  static cannoli::ColorRGB PaintBackground(cannoli::LightRay &ray);
+  void writePPMImage(std::ofstream &stream, int samples);
+  void setupImage();
+  void resetPixel();
+  Vec3f generateDirection(int pixel_x, int pixel_y);
+  static LightRay emitRay(const Vec3f &origin, const Vec3f &direction);
+  static cannoli::ColorRGB paintBackground(LightRay &ray);
 
-  void loadScene(Scene scene) {
-	m_scene = std::move(scene);
+  void loadScene(Scene &scene) {
+	m_scene = scene;
   }
-  void setCamera(const Camera &camera) {
+  void setCamera(Camera &camera) {
 	m_camera = camera;
   }
-  void setCanvas(const Canvas &canvas) {
+  void setCanvas(Canvas &canvas) {
 	m_canvas = canvas;
   }
   void setOutputPath(std::string &out_fn) {
@@ -55,9 +55,9 @@ class RayTracer {
 
  private:
   std::ofstream m_ppmImage{};
-  Scene m_scene;
-  Canvas m_canvas;
-  Camera m_camera;
+  Scene m_scene{};
+  Canvas m_canvas{};
+  Camera m_camera{};
   ColorRGB m_pixelColor{};
   bool m_stopTrace{false};
   std::string m_outFile;

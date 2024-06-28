@@ -4,17 +4,17 @@ cannoli::Mesh::Mesh(objl::Mesh &mesh, std::shared_ptr<Material> &material) :
   m_indices(mesh.Indices),
   m_name(mesh.MeshName),
   m_meshMaterial(material),
-  m_faceCount(m_indices.size() / 3) {
+  m_triangleCount(m_indices.size() / 3) {
 
   // Convert the vertex positions from objl's Vector3 format to Vec3f
   for (const auto &objl_vertex : mesh.Vertices) {
 	m_vertices.push_back(cannoli::vec3ToVec3f(objl_vertex.Position));
   }
 
-
-  // Compute the mesh's axis-alignes bounding box (AABB)
+  constructBVH();
+  // Compute the mesh's axis-aligned bounding box (AABB)
   computeAABB();
-  fmt::print("Constructed Mesh {} \n Number of Vertices: {} \n Number of Faces: {} \n", m_name, m_vertices.size(), m_faceCount);
+  fmt::print("Constructed Mesh {} \n Number of Vertices: {} \n Number of Faces: {} \n", m_name, m_vertices.size(), m_triangleCount);
 }
 
 bool cannoli::Mesh::computeTriangleIntersection(LightRay &ray,
@@ -119,4 +119,7 @@ void cannoli::Mesh::computeAABB() {
 	  m_aabb = m_aabb.expand(pt);
 	}
   }
+}
+void cannoli::Mesh::constructBVH() {
+
 }

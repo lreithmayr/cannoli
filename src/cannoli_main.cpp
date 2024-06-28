@@ -19,12 +19,12 @@ int main() {
   constexpr int CANVAS_WIDTH = 800;
 
   // Ray tracer parameters
-  constexpr int SAMPLES = 30;
-  constexpr int MAX_BOUNCES = 4;
+  constexpr int SAMPLES = 10;
+  constexpr int MAX_BOUNCES = 10;
 
   // Scene parameters
-  std::string scene_name = "blocks.obj";
-  std::string scene_path = fmt::format("../models/{}", scene_name);
+  std::string scene_name = "blocks";
+  std::string scene_path = fmt::format("../models/{}.obj", scene_name);
   std::string out_path = fmt::format("../images/cannoli_output_{}_samples-{}_maxBounces-{}.ppm", scene_name, SAMPLES, MAX_BOUNCES);
 
   // Initialize the camera
@@ -39,7 +39,7 @@ int main() {
 
   // Initialize the canvas
   cannoli::Canvas canvas;
-  canvas.setAspectRation(ASPECT_RATIO);
+  canvas.setAspectRatio(ASPECT_RATIO);
   canvas.setWidth(CANVAS_WIDTH);
   canvas.initialize();
 

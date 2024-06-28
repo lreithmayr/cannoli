@@ -9,6 +9,7 @@
 #include "material.h"
 #include "object.h"
 #include "aabb.h"
+#include "bvh.h"
 
 #include <string>
 #include <memory>
@@ -27,7 +28,7 @@ class Mesh {
   }
 
   [[nodiscard]] int getFaceCount() const {
-	return m_faceCount;
+	return m_triangleCount;
   }
 
   [[nodiscard]] std::shared_ptr<Material> getMaterial() const {
@@ -38,14 +39,19 @@ class Mesh {
 	return std::make_shared<AABB>(m_aabb);
   }
 
-  bool computeTriangleIntersection(LightRay &ray,
-								   const float &t_min,
-								   const float &t_max,
-								   HitRecord &hit_record,
-								   int triangle_nr);
+  [[nodiscard]] std::shared_ptr<BVH> getBBVH() const {
+	return std::make_shared<BVH>(m_bvh);
+  }
 
+  bool computeTriangleIntersection(
+	LightRay &ray,
+	const float &t_min,
+	const float &t_max,
+	HitRecord &hit_record,
+	int triangle_nr);
   LightRay computeSurfaceInteraction(const LightRay &ray, const HitRecord &hit_record);
   void computeAABB();
+  void constructBVH();
 
  private:
   std::vector<cannoli::Vec3f> m_vertices;
@@ -54,9 +60,9 @@ class Mesh {
   std::shared_ptr<Material> m_meshMaterial;
 
  private:
-  int m_faceCount = 0;
+  int m_triangleCount = 0;
   AABB m_aabb;
-
+  BVH m_bvh;
 };
 } // namespace cannoli
 #endif //CANNOLI_SRC_MESH_H_

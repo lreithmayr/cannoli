@@ -9,7 +9,7 @@ class Canvas {
 	m_height = static_cast<int>(m_width / m_aspectRatio);
   }
 
-  void setAspectRation(float aspect_ratio) {
+  void setAspectRatio(float aspect_ratio) {
 	m_aspectRatio = aspect_ratio;
   }
 
